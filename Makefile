@@ -1,5 +1,5 @@
 
-all:  bootloader kernel userland image
+all:  bootloader kernel userland image clean_noimage
 
 bootloader:
 	cd Bootloader; make all
@@ -16,6 +16,11 @@ image: kernel bootloader userland
 clean:
 	cd Bootloader; make clean
 	cd Image; make clean
+	cd Kernel; make clean
+	cd Userland; make clean
+
+clean_noimage:
+	cd Bootloader; make clean
 	cd Kernel; make clean
 	cd Userland; make clean
 
