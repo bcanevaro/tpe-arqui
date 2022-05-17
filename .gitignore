@@ -12,3 +12,7 @@
 
 #VS Code
 .vscode
+
+#History
+.bash_history
+.gdb_history

@@ -9,8 +9,8 @@ docker exec -it tpe make -C /root all
 docker stop tpe
 printf "\033[0;36m############################### END ###############################\033[0m\n"
 
-if [ $# -eq 1 ] && [ $1 == "run" ]
+if [ $# -ge 1 ] && [ $1 == "run" ]
 then
 	cd /home/nehuenllanos/Desktop/TPE/tpe-arqui
-	sudo ./run.sh
+	sudo ./run.sh $2
 fi
