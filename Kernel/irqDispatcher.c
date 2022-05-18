@@ -2,19 +2,14 @@
 #include <keyboard.h>
 #include <stdint.h>
 
+typedef void (*int_function)(void);
 static void int_20();
 static void int_21();
+static int_function interruptions[2] = {&int_20, &int_21};
 
 // Arreglar para que quede como un arreglo de punteros a funcion
 void irqDispatcher(uint64_t irq) {
-	switch (irq) {
-		case 0:
-			int_20();
-			break;
-		case 1:
-			int_21();
-			break;
-	}
+	interruptions[irq]();
 	return;
 }
 
