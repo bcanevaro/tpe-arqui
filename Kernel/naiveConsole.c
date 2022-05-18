@@ -6,7 +6,7 @@ static char buffer[64] = { '0' };
 static uint8_t * const video = (uint8_t*)0xB8000;
 static uint8_t * currentVideo = (uint8_t*)0xB8000;
 static const uint32_t width = 80;
-static const uint32_t height = 25 ;
+static const uint32_t height = 25;
 
 void ncPrint(const char * string)
 {
@@ -18,8 +18,7 @@ void ncPrint(const char * string)
 
 void ncPrintChar(char character)
 {
-	*currentVideo = character;
-	currentVideo += 2;
+	ncPrintColorfulChar(character, L_GRAY, BLACK);
 }
 
 void ncNewline()
@@ -62,8 +61,10 @@ void ncClear()
 {
 	int i;
 
-	for (i = 0; i < height * width; i++)
+	for (i = 0; i < height * width; i++) {
 		video[i * 2] = ' ';
+		video[i * 2 + 1] = ( 0x00 | BLACK ) << 4 | L_GRAY;
+	}
 	currentVideo = video;
 }
 
@@ -100,7 +101,28 @@ static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
 	return digits;
 }
 
+void prueba() {
+
+}
+
+void scroll() {
+	uint8_t * currentVideoAux = video + width * 2;
+	for (int i = 0; currentVideoAux <= currentVideo; currentVideoAux++, i++) {
+		video[i] = *currentVideoAux;
+	}
+	prueba();
+	currentVideo = currentVideo - width * 2;
+	uint8_t * currentVideoAux2 = currentVideo;
+	for (int i = 0; currentVideoAux2 <= currentVideoAux; currentVideoAux2 += 2, i += 2) {
+		currentVideo[i] = ' ';
+		currentVideo[i + 1] = ( 0x00 | BLACK ) << 4 | L_GRAY;
+	}
+}
+ 
 void ncPrintColorfulChar(char c, color foreground, color background) {
+	if ((uint32_t)currentVideo == (uint32_t)video + width * height * 2 - 2) {
+		scroll();
+	}
 	*currentVideo = c;
 	*(currentVideo + 1) = ( 0x00 | background ) << 4 | foreground;
 	currentVideo += 2;
