@@ -47,15 +47,15 @@ static int sys_write(unsigned int fd, const char * buf, unsigned int count) {
 }
 
 static int sys_read(unsigned int fd, char * buf, unsigned int count){
-    int i,j,k;
+    int i;
     char * buffer = get_buffer();
     int dim = get_dim();
     for( i = 0 ; i < count && i < dim ; i++){
         buf[i] = buffer[i];
     }
-    for(j = 0 , k = i ; j <= dim - i ; j++, k++,dim--){
+    for(int j = 0, k = i, len_to_copy = dim - i ; j < len_to_copy ; j++, k++){
         buffer[j] = buffer[k];
     }
-    update_dim(dim);
+    update_dim(dim - i);
     return i;
 }
