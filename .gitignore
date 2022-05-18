@@ -10,6 +10,9 @@
 #Object files
 *.o
 
+#ELF
+*.elf
+
 #VS Code
 .vscode
 
