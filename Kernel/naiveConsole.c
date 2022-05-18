@@ -93,3 +93,32 @@ static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
 
 	return digits;
 }
+
+void ncPrintColorfulChar(char c, color foreground, color background) {
+	*currentVideo = c;
+	*(currentVideo + 1) = ( 0x00 | background ) << 4 | foreground;
+	currentVideo += 2;
+}
+
+void ncPrintColorful(char * str, color foreground, color background) {
+	for (int i = 0; str[i] != 0; i++) {
+		ncPrintColorfulChar(str[i], foreground, background);
+	}
+}
+
+void ncPrintColorfulDec(uint64_t value, color foreground, color background) {
+	ncPrintColorfulBase(value, 10, foreground, background);
+}
+
+void ncPrintColorfulHex(uint64_t value , color foreground, color background) {
+	ncPrintColorfulBase(value, 16, foreground, background);
+}
+
+void ncPrintColorfulBin(uint64_t value, color foreground, color background) {
+	ncPrintColorfulBase(value, 2, foreground, background);
+}
+
+void ncPrintColorfulBase(uint64_t value, uint32_t base, color foreground, color background) {
+    uintToBase(value, buffer, base);
+    ncPrintColorful(buffer, foreground, background);
+}

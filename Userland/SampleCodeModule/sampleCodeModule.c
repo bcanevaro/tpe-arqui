@@ -1,5 +1,7 @@
 /* sampleCodeModule.c */
 
+#include <syscalls.h>
+
 char * v = (char*)0xB8000 + 79 * 2;
 
 static int var1 = 0;
@@ -7,6 +9,9 @@ static int var2 = 0;
 
 
 int main() {
+
+	write(1, "HOLA", 4);
+
 	//All the following code may be removed 
 	*v = 'X';
 	*(v+1) = 0x74;
@@ -16,4 +21,8 @@ int main() {
 		return 0xDEADC0DE;
 
 	return 0xDEADBEEF;
+}
+
+void prueba() {
+	return;
 }

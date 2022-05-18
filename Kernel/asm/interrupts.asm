@@ -12,11 +12,13 @@ GLOBAL _irq02Handler
 GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
+GLOBAL _irq80Handler
 
 GLOBAL _exception0Handler
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
+EXTERN syscallDispatcher
 
 SECTION .text
 
@@ -137,6 +139,24 @@ _irq04Handler:
 ;USB
 _irq05Handler:
 	irqHandlerMaster 5
+
+; Se usa la convención de Linux -> vease https://alejofl.github.io/syscalls/x86_64/
+_irq80Handler:
+	pushState
+
+	mov rcx, rax ; pasaje de numero de syscall
+	call syscallDispatcher
+
+	mov rcx, rax
+
+	; signal pic EOI (End of Interrupt)
+	mov al, 20h
+	out 20h, al
+
+	mov rax, rcx
+
+	popState
+	iretq
 
 
 ;Zero Division Exception

@@ -140,10 +140,6 @@ loop:
 read_port:
 	push rbp
 	mov rbp, rsp
-	; mov dx, [rbp+4]
-	; mov rdx, 0x60
-	; mov rdx, [rbp+16]
-	; mov dx, 0x60
 	mov dx, di
 	in al, dx
 	mov rsp, rbp

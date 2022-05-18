@@ -4,6 +4,7 @@
 
 static void int_20();
 static void int_21();
+
 // Arreglar para que quede como un arreglo de punteros a funcion
 void irqDispatcher(uint64_t irq) {
 	switch (irq) {
