@@ -31,6 +31,12 @@ void ncNewline()
 	while((uint64_t)(currentVideo - video) % (width * 2) != 0);
 }
 
+void ncBackspace() {
+	currentVideo -= 2;
+	*currentVideo = ' ';
+	*(currentVideo + 1) = 0x07;
+}
+
 void ncPrintDec(uint64_t value)
 {
 	ncPrintBase(value, 10);

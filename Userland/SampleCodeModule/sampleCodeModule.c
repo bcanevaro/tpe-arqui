@@ -11,6 +11,9 @@ static int var2 = 0;
 int main() {
 
 	write(1, "HOLA", 4);
+	while (1) {
+		
+	}
 
 	//All the following code may be removed 
 	*v = 'X';
