@@ -142,7 +142,12 @@ _irq05Handler:
 
 ; Se usa la convención de Linux -> vease https://alejofl.github.io/syscalls/x86_64/
 _irq80Handler:
-	pushState
+	push rbp
+	push    rsp
+	push    rbx
+	push    r12
+	push    r13
+	push    r15
 
 	mov rcx, rax ; pasaje de numero de syscall
 	call syscallDispatcher
@@ -155,7 +160,12 @@ _irq80Handler:
 
 	mov rax, rcx
 
-	popState
+	pop r15
+	pop r13
+	pop r12
+	pop rbx
+	pop rsp
+	pop rbp
 	iretq
 
 

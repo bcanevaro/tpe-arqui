@@ -1,11 +1,12 @@
 #include <keyboard.h>
 #include <naiveConsole.h>
+#include <signal.h>
 
 static int shift = 0;
 static int caps_lock = 0;
 static uint8_t lower_array[] = {
       0,   27, '1', '2', '3', '4', '5', '6', '7', '8', '9',  '0', '-', '=',
-   	'\b','\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',  '[', ']',
+   	  8,'\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',  '[', ']',
    	'\n',   0, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`',
       0, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/',    0, '*',
       0,  ' ',   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,    0,   0,
@@ -14,7 +15,7 @@ static uint8_t lower_array[] = {
 };
 static uint8_t upper_array[] = {
       0,   27, '!', '@', '#', '$', '%', '^', '&', '*', '(',  ')', '_', '+',
-   	'\b','\t', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',  '{', '}',
+   	  8,'\t', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',  '{', '}',
    	'\n',   0, 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '\"', '`',
       0, '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?',    0, '*',
       0,  ' ',   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,    0,   0,
@@ -23,14 +24,29 @@ static uint8_t upper_array[] = {
 };
 static uint8_t caps_lock_array[] = {
       0,   27, '1', '2', '3', '4', '5', '6', '7', '8', '9',  '0', '-', '=',
-   	'\b','\t', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',  '[', ']',
+   	  8,'\t', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',  '[', ']',
    	'\n',   0, 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', '\'', '`',
       0, '\\', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/',    0, '*',
       0,  ' ',   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,    0,   0,
       0,    0,   0,   0, '-',   0,   0,   0, '+',   0,   0,   0,    0,   0,
       0,    0,   0,   0,   0,   0
 };
-// Maneja el RTC.
+
+char buffer[256];
+int actualDim = 0;
+
+char * get_buffer(){
+    return buffer;
+}
+
+int get_dim(){
+    return actualDim;
+}
+
+void update_dim(int dim){
+    actualDim = dim;
+}
+
 void keyboard_handler() {
 	uint8_t scancode = read_port(0x60);
     if(scancode >= 128){
@@ -42,20 +58,19 @@ void keyboard_handler() {
         shift = 1;
     }else if(scancode == 58){
         caps_lock = !caps_lock;
-    } else if (scancode == 14) {
-        ncBackspace();
-    } else if (scancode == 28) {
-        ncNewline();
-    } else if (scancode == 15) {
-        ncPrint("    ");
-    }else{
+    } 
+    else{
         if (lower_array[scancode] != 0) {
+            char letter;
             if(shift){
-                ncPrintChar(upper_array[scancode]);
+                letter = upper_array[scancode];
             }else if(caps_lock){
-                ncPrintChar(caps_lock_array[scancode]);
+                letter = caps_lock_array[scancode];
             }else{
-                ncPrintChar(lower_array[scancode]);
+                letter = lower_array[scancode];
+            }
+            if( actualDim < 256){
+                buffer[actualDim++] = letter;
             }
         }
     }
