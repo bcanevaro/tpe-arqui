@@ -7,6 +7,7 @@ static int var1 = 0;
 static int var2 = 0;
 
 int main() {
+	clear_screen();
 	while(1){
 		terminal();
 	}

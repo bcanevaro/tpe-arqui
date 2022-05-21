@@ -23,6 +23,7 @@ static Command commands_functions[] = {&help, &divide_by_zero, &invalid_opcode, 
 void terminal();
 void error();
 
+// Falta el ctrl + c
 void terminal(){
     /*
         1.1 Tenemos que printear esto "$> "
@@ -63,7 +64,9 @@ void terminal(){
         }
     }
     buffer[i-1] = 0;
-    // Nos olvidamos del crtl + c
+    if(buffer[0] == 0){ // Caso cuando tocamos enter
+        return; 
+    }
     if(pipe == 1){
         // Lo vemos despues
     }else if(pipe == 0){

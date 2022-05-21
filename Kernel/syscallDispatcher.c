@@ -5,7 +5,7 @@
 #include <syscallDispatcher.h>
 
 typedef int (*sys_call)(unsigned int, char *, unsigned int);
-static sys_call system_call[2] = {&sys_read, &sys_write};
+static sys_call system_call[3] = {&sys_read, &sys_write, &sys_clear};
 
 int syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t syscall_number) {
 	return system_call[syscall_number](rdi, rsi, rdx);
@@ -47,4 +47,9 @@ int sys_read(unsigned int fd, char * buf, unsigned int count){
     }
     update_dim(dim - i);
     return i;
+}
+
+int sys_clear(uint64_t rdi, uint64_t rsi, uint64_t rdx){
+    ncClear();
+    return 1;
 }
