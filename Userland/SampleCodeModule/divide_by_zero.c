@@ -1,4 +1,4 @@
 
-int divide_by_zero() {
-    return 5 / 0;
+void divide_by_zero() {
+    int j = 5 / 0;
 }

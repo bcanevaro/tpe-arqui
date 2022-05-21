@@ -29,7 +29,7 @@ static int sys_write(unsigned int fd, const char * buf, unsigned int count) {
             ncBackspace();
         }
         else{
-            ncPrintChar(buf[i]);
+            ncPrintColorfulChar(buf[i], foreground, background);
         }
     }
     return i;

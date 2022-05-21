@@ -1,0 +1,3 @@
+void primes(){
+    return;
+}
