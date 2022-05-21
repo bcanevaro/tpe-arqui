@@ -34,7 +34,3 @@ int main() {
 
 	return 0xDEADBEEF;
 }
-
-void prueba() {
-	return;
-}
