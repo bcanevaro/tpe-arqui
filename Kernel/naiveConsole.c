@@ -150,3 +150,29 @@ void ncPrintColorfulBase(uint64_t value, uint32_t base, color foreground, color 
     uintToBase(value, buffer, base);
     ncPrintColorful(buffer, foreground, background);
 }
+
+void ncColorfulNewline(color background) {
+	do
+	{
+		ncPrintColorfulChar(' ', BLACK, background);
+	}
+	while((uint64_t)(currentVideo - video) % (width * 2) != 0);
+}
+
+void printRegisterFormat(uint64_t reg){
+    uint64_t aux = reg;
+    uint64_t zeroes =  16;
+    
+    while (aux) {
+        aux = aux >> 4;
+    	zeroes--;
+    }
+
+    for(int i = 0; i < zeroes; i++){
+       ncPrintColorfulChar('0', RED, WHITE);
+    }
+  
+    if (reg) {
+       ncPrintColorfulHex(reg, RED, WHITE);
+    }
+}

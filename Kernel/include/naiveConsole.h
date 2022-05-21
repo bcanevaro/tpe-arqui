@@ -27,6 +27,9 @@ void ncPrintColorfulDec(uint64_t value, color foreground, color background);
 void ncPrintColorfulHex(uint64_t value , color foreground, color background);
 void ncPrintColorfulBin(uint64_t value, color foreground, color background);
 void ncPrintColorfulBase(uint64_t value, uint32_t base, color foreground, color background);
+void ncColorfulNewline(color background);
+
+void printRegisterFormat(uint64_t reg);
 
 void ncPrint(const char * string);
 void ncPrintChar(char character);

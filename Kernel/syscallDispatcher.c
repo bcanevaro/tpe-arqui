@@ -2,14 +2,11 @@
 #include <naiveConsole.h>
 #include <defs.h>
 #include <keyboard.h>
+#include <syscallDispatcher.h>
 
 typedef int (*sys_call)(unsigned int, char *, unsigned int);
-static int sys_write(unsigned int fd, const char * buf, unsigned int count);
-static int sys_read(unsigned int fd, char * buf, unsigned int count);
 static sys_call system_call[2] = {&sys_read, &sys_write};
 
-
-// Arreglar para que quede como un arreglo de punteros a funcion
 int syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t syscall_number) {
 	return system_call[syscall_number](rdi, rsi, rdx);
 }
@@ -38,7 +35,7 @@ static int sys_write(unsigned int fd, const char * buf, unsigned int count) {
     return i;
 }
 
-static int sys_read(unsigned int fd, char * buf, unsigned int count){
+int sys_read(unsigned int fd, char * buf, unsigned int count){
     int i;
     char * buffer = get_buffer();
     int dim = get_dim();

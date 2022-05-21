@@ -1,29 +1,43 @@
 #include <naiveConsole.h>
+#include <syscallDispatcher.h>
 #define ZERO_EXCEPTION_ID 0
 #define INVALID_OPCODE_EXCEPTION_ID 6
 
 
 static void zero_division();
 static void invalid_opcode();
+typedef void (*Exception)(void);
+static void excepHandler(char * msg);
+extern void continue_execution();
+extern void _hlt();
+
+
+static Exception exceptions[]={&zero_division, 0, 0, 0, 0, 0, &invalid_opcode};
+static char * message[] = {"Zero Division Exception", "Invalid Opcode Exception"};
 
 void exceptionDispatcher(int exception) {
-	if (exception == ZERO_EXCEPTION_ID){
-		zero_division();
-	}else if ( exception == INVALID_OPCODE_EXCEPTION_ID){
-		invalid_opcode();
-	}	
+  Exception ex = exceptions[exception];
+	if(ex != 0){
+		ex();
+	}
 }
-// Handler para manejar la excepcion de division por cero
+
+static void excepHandler(char * msg){
+	ncPrintColorful(msg, RED, WHITE);
+	ncColorfulNewline(WHITE);
+	ncPrintColorful("Presione enter para continuar", RED, WHITE);
+	char c[1];
+	do{
+		_hlt();		// halts the central processing unit until the next external interrupt is fired.
+	} while(sys_read(1, c, 1) != 1 || c[0] != '\n');
+	ncClear();
+	continue_execution();
+}
+
 static void zero_division() {
-	// Printear los registros y tambien el RIP
-	ncNewline();
-	ncPrintColorful("Zero Division Exception", RED, BLACK);
-	ncNewline();
+	excepHandler(message[0]);
 }
-// Handler para manejar la excepcion de invalid opcode
-static void invalid_opcode() {
-	// Printear los registros y tambien el RIP
-	ncNewline();
-	ncPrintColorful("Invalid Opcode Exception", RED, BLACK);
-	ncNewline();
+
+static void invalid_opcode(){
+	excepHandler(message[1]);
 }
