@@ -5,6 +5,9 @@ GLOBAL rtc_bd_to_binary
 GLOBAL kb_flag
 GLOBAL get_key
 GLOBAL read_port
+GLOBAL rtc_day
+GLOBAL rtc_month
+GLOBAL rtc_year
 
 section .text
 
@@ -87,6 +90,57 @@ rtc_seconds:
 
 	; Finalmente obtenemos la hora en binario
 	mov al, 00h
+	out 70h, al
+	in al, 71h
+	
+	; Desarmado del StackFrame
+	mov rsp, rbp
+	pop rbp
+	ret
+
+rtc_day:
+	; Armado del StackFrame
+	push rbp
+	mov rbp, rsp
+
+	call rtc_bd_to_binary
+
+	; Finalmente obtenemos la hora en binario
+	mov al, 07h
+	out 70h, al
+	in al, 71h
+	
+	; Desarmado del StackFrame
+	mov rsp, rbp
+	pop rbp
+	ret
+
+rtc_month:
+	; Armado del StackFrame
+	push rbp
+	mov rbp, rsp
+
+	call rtc_bd_to_binary
+
+	; Finalmente obtenemos la hora en binario
+	mov al, 08h
+	out 70h, al
+	in al, 71h
+	
+	; Desarmado del StackFrame
+	mov rsp, rbp
+	pop rbp
+	ret
+
+rtc_year:
+	; Armado del StackFrame
+	push rbp
+	mov rbp, rsp
+
+	call rtc_bd_to_binary
+
+	; Finalmente obtenemos la hora en binario
+	mov al, 09h
 	out 70h, al
 	in al, 71h
 	

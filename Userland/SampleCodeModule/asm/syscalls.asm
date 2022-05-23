@@ -2,6 +2,7 @@ GLOBAL write
 GLOBAL read
 GLOBAL clear_screen
 GLOBAL seconds_elapsed
+GLOBAL system_datetime
 
 section .text
 
@@ -38,6 +39,15 @@ seconds_elapsed:
     enter 0, 0
 
     mov rax, 0x03
+    int 80h
+
+    leave
+    ret
+
+system_datetime:
+    enter 0, 0
+
+    mov rax, 0x04
     int 80h
 
     leave

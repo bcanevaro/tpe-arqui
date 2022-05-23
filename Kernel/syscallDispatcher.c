@@ -4,9 +4,13 @@
 #include <defs.h>
 #include <keyboard.h>
 #include <syscallDispatcher.h>
+#include <functions.h>
 
 typedef int (*sys_call)(unsigned int, char *, unsigned int);
-static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed};
+static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime};
+
+typedef uint8_t (*rtc_argument)(void);
+static rtc_argument realtime[] = {&rtc_seconds, &rtc_minutes, &rtc_hours, &rtc_day, &rtc_month, &rtc_year};
 
 int syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t syscall_number) {
 	return system_call[syscall_number](rdi, rsi, rdx);
@@ -57,4 +61,12 @@ int sys_clear(uint64_t rdi, uint64_t rsi, uint64_t rdx){
 
 int sys_seconds_elapsed(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
     return seconds_elapsed();
+}
+
+int sys_datetime(uint64_t * rdi, uint64_t rsi, uint64_t rdx){
+    for(int i = 0; i < 6; i++){
+        uint64_t aux = realtime[i]();
+        rdi[i] = aux;
+    }
+    return 1;
 }
