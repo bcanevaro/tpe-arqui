@@ -2,7 +2,6 @@
 
 static unsigned long ticks = 0;
 
-// Maneja el RTC.
 void timer_handler() {
 	ticks++;
 }

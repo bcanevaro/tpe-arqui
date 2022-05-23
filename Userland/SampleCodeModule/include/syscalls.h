@@ -5,5 +5,6 @@
 int write(int fd, const char * buf, int count);
 int read(int fd, char * buf, int count);
 int clear_screen();
+int seconds_elapsed();
 
 #endif

@@ -1,3 +1,4 @@
+#include <timer.h>
 #include <stdint.h>
 #include <naiveConsole.h>
 #include <defs.h>
@@ -5,13 +6,13 @@
 #include <syscallDispatcher.h>
 
 typedef int (*sys_call)(unsigned int, char *, unsigned int);
-static sys_call system_call[3] = {&sys_read, &sys_write, &sys_clear};
+static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed};
 
 int syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t syscall_number) {
 	return system_call[syscall_number](rdi, rsi, rdx);
 }
 
-static int sys_write(unsigned int fd, const char * buf, unsigned int count) {
+int sys_write(unsigned int fd, const char * buf, unsigned int count) {
     color foreground = L_GRAY;
     color background = BLACK;
     if (fd == STDERR) {
@@ -52,4 +53,8 @@ int sys_read(unsigned int fd, char * buf, unsigned int count){
 int sys_clear(uint64_t rdi, uint64_t rsi, uint64_t rdx){
     ncClear();
     return 1;
+}
+
+int sys_seconds_elapsed(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
+    return seconds_elapsed();
 }

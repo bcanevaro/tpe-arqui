@@ -15,6 +15,7 @@ void print_mem(char * address){
 			write(1, "\n", 1);
 		}
 		char buff[16];
+		write(1, "0x", 2);
 		uint32_t digits = uint_to_base((uint64_t) to_print, buff, BASE_HEX);
         write(1, buff, digits);
 		write(1, "=", 1);

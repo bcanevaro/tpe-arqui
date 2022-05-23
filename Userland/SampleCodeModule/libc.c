@@ -24,7 +24,7 @@ int strlen(char * str){
     return i;
 }
 
-int str_to_num(char * str){
+int str_to_num (char * str) {
     int num = 0;
     for (int i = 0; str[i] != 0; i++) {
         if (str[i] < '0' || str[i] > '9' ) {
@@ -35,7 +35,6 @@ int str_to_num(char * str){
     }
     return num;
 }
-
 
 uint64_t str_to_hex(char * str){
     int num = 0;
@@ -59,7 +58,7 @@ uint64_t str_to_hex(char * str){
     }
     return num;
 }
-// 0x 0X
+
 int is_valid_hex(char * str){
     int i = 0;
     if(str[i++] != '0'){
@@ -77,4 +76,55 @@ int is_valid_hex(char * str){
         }
     }
     return 1;
+}
+
+// Retorna longitud de cadena ó ERROR
+int num_to_str(unsigned long long num, char * buffer, int bufferSize) {
+    if (bufferSize <= 0) {
+        return -1;
+    }
+
+    if (num == 0) {
+        buffer[0] = '0';
+        buffer[1] = '\0';
+        return 1;
+    }
+
+    int isNeg = 0;
+    if (num < 0) {
+        buffer[0] = '-';
+        num *= -1;
+        isNeg = 1;
+    }
+
+    int digitCount = num_length(num);
+    
+    int startPos = digitCount + isNeg - 1;
+    if (startPos + 1 > bufferSize) {
+        return -1;
+    }
+
+    buffer[startPos+1] = '\0';
+    for(int i = 0; i < digitCount; i++) {
+        buffer[startPos - i] = num % 10 + '0';
+        num /= 10;
+    }
+    return startPos + 1;
+}
+
+int num_length(unsigned long long num) {
+    if (num < 0){
+      num*=-1;
+    }
+    int length = 0;
+    while (num > 0) {
+        length++;
+        num /= 10;
+    }
+    return length;
+}
+
+void sleep(int seconds) {
+    int seconds_e = seconds_elapsed();
+    for (int i = seconds_elapsed(); i < seconds_e + seconds; i = seconds_elapsed());
 }
