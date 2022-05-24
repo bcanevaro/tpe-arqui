@@ -1,3 +1,0 @@
-void inforeg(){
-    return;
-}
