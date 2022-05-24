@@ -7,7 +7,7 @@
 #include <functions.h>
 
 typedef int (*sys_call)(unsigned int, char *, unsigned int);
-static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime};
+static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime, &sys_print_byte_from_mem};
 
 typedef uint8_t (*rtc_argument)(void);
 static rtc_argument realtime[] = {&rtc_seconds, &rtc_minutes, &rtc_hours, &rtc_day, &rtc_month, &rtc_year};
@@ -68,5 +68,24 @@ int sys_datetime(uint64_t * rdi, uint64_t rsi, uint64_t rdx){
         uint64_t aux = realtime[i]();
         rdi[i] = aux;
     }
+    return 1;
+}
+
+int sys_print_byte_from_mem(uint8_t * address, uint64_t rsi, uint64_t rdx) {
+    ncPrint("0x");
+    ncPrintHex((uint64_t) address);
+    ncPrint("=");
+    
+    int n = *address;
+    int digits = 0;
+    while (n > 0) {
+        digits++;
+        n /= 16;
+    }
+
+    if (digits <= 1) {
+        ncPrint("0");
+    }
+    ncPrintHex(*address);
     return 1;
 }

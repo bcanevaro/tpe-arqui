@@ -3,6 +3,7 @@ GLOBAL read
 GLOBAL clear_screen
 GLOBAL seconds_elapsed
 GLOBAL system_datetime
+GLOBAL print_byte_from_mem
 
 section .text
 
@@ -48,6 +49,15 @@ system_datetime:
     enter 0, 0
 
     mov rax, 0x04
+    int 80h
+
+    leave
+    ret
+
+print_byte_from_mem:
+    enter 0, 0
+
+    mov rax, 0x05
     int 80h
 
     leave
