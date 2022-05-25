@@ -10,7 +10,7 @@ static char * register_names[] = {"RAX=", "RBX=", "RCX=", "RDX=", "RBP=", "RDI="
 void print_regs(uint64_t registers[]) {
     char buffer[17];
     for (int i = 0; i < REGITER_COUNT; i++) {
-        write(1, register_names[i], 4);
+        write(1, register_names[i], REGISTER_NAME_LEN);
 
         int digits = uint_to_base(registers[i], buffer, 16);
         for (int j = 0; j < 16 - digits; j++) {

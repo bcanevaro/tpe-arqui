@@ -63,10 +63,9 @@ int sys_seconds_elapsed(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
     return seconds_elapsed();
 }
 
-int sys_datetime(uint64_t * rdi, uint64_t rsi, uint64_t rdx){
+int sys_datetime(uint64_t * info, uint64_t rsi, uint64_t rdx){
     for(int i = 0; i < 6; i++){
-        uint64_t aux = realtime[i]();
-        rdi[i] = aux;
+        info[i] = realtime[i]();
     }
     return 1;
 }

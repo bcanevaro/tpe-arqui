@@ -3,9 +3,8 @@
 
 void datetime(){
     uint64_t realtime[6];
-	uint64_t minutes;
-	uint64_t seconds;
-    system_datetime(realtime, minutes, seconds);
+    system_datetime(realtime);
+    // TODO -> tener en cuenta los días y eso.
     if(realtime[2] >= 0 && realtime[2] <= 2){
         realtime[2] += 21;
     }else{
