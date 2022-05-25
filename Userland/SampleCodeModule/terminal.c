@@ -68,7 +68,12 @@ void terminal(){
         return; 
     }
     if(pipe == 1){
-        // Lo vemos despues
+        // Llamar a una syscall para pasar a kernel dos punteros a funcion
+        // que representan los dos procesos a correr en simultaneo.
+        //  (vector con dos putneros a funcion, arg de la func1, arg de la func2)
+        //  (vector con dos putneros a funcion, vector args defunc1, vector args de func2)
+        // los ultimos dos vectores que contienen argumentos tienen que ser null terminated.
+        
     }else if(pipe == 0){
         int found = 0;
         for(int i = 0; !found && i < COMMS_LEN - 1; i++){
