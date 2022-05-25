@@ -24,7 +24,7 @@ inforeg:
     mov [registers+112], r14
     mov [registers+120], r15
 
-    mov rdi, registers
+    mov rsi, registers
     call print_regs
 
     ret

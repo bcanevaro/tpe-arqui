@@ -1,6 +1,6 @@
 #ifndef DATETIME_H
 
 #define DATETIME_H
-void datetime();
+void datetime(unsigned int fd);
 
 #endif

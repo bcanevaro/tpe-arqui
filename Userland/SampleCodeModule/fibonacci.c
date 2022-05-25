@@ -15,14 +15,14 @@ static int str2_length = 4;
 static char str3[] = "\n";
 static int str3_length = 1;
 
-void fibonacci() {
+void fibonacci(unsigned int fd) {
     if (!stop_fibo) {
         char fibo0[] = "Fibonacci(0) = 0\n";
         char fibo1[] = "Fibonacci(1) = 1\n";
-        write(1, fibo0, strlen(fibo0));
-        sleep(1);
-        write(1, fibo1, strlen(fibo1));
-        sleep(1);
+        write(fd, fibo0, strlen(fibo0));
+        // sleep(1);
+        write(fd, fibo1, strlen(fibo1));
+        // sleep(1);
     }
     while (!stop_fibo) {
         unsigned long long f = get_next_fibo();
@@ -34,12 +34,12 @@ void fibonacci() {
         char counter_str[counter_length + 1];
         num_to_str(counter, counter_str, counter_length + 1);
 
-        write(1, str1, str1_length);
-        write(1, counter_str, counter_length);
-        write(1, str2, str2_length);
-        write(1, str, length + 1);
-        write(1, str3, str3_length);
-        sleep(1);
+        write(fd, str1, str1_length);
+        write(fd, counter_str, counter_length);
+        write(fd, str2, str2_length);
+        write(fd, str, length + 1);
+        write(fd, str3, str3_length);
+        // sleep(1);
     }
 }
 

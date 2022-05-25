@@ -34,74 +34,91 @@ void * getStackBase()
 	);
 }
 
+//CAMBIAR ESTO
 void * initializeKernelBinary()
 {
 	char buffer[10];
 
-	ncPrint("[x64BareBones]");
-	ncNewline();
+	ncPrint(1, "[x64BareBones]");
+	ncNewline(1);
 
-	ncPrint("CPU Vendor:");
-	ncPrint(cpuVendor(buffer));
-	ncNewline();
+	ncPrint(1, "CPU Vendor:");
+	ncPrint(1, cpuVendor(buffer));
+	ncNewline(1);
 
-	ncPrint("[Loading modules]");
-	ncNewline();
+	ncPrint(1, "[Loading modules]");
+	ncNewline(1);
 	void * moduleAddresses[] = {
 		sampleCodeModuleAddress,
 		sampleDataModuleAddress
 	};
 
 	loadModules(&endOfKernelBinary, moduleAddresses);
-	ncPrint("[Done]");
-	ncNewline();
-	ncNewline();
+	ncPrint(1, "[Done]");
+	ncNewline(1);
+	ncNewline(1);
 
-	ncPrint("[Initializing kernel's binary]");
-	ncNewline();
+	ncPrint(1, "[Initializing kernel's binary]");
+	ncNewline(1);
 
 	clearBSS(&bss, &endOfKernel - &bss);
 
-	ncPrint("  text: 0x");
-	ncPrintHex((uint64_t)&text);
-	ncNewline();
-	ncPrint("  rodata: 0x");
-	ncPrintHex((uint64_t)&rodata);
-	ncNewline();
-	ncPrint("  data: 0x");
-	ncPrintHex((uint64_t)&data);
-	ncNewline();
-	ncPrint("  bss: 0x");
-	ncPrintHex((uint64_t)&bss);
-	ncNewline();
+	ncPrint(1, "  text: 0x");
+	ncPrintHex(1, (uint64_t)&text);
+	ncNewline(1);
+	ncPrint(1, "  rodata: 0x");
+	ncPrintHex(1, (uint64_t)&rodata);
+	ncNewline(1);
+	ncPrint(1, "  data: 0x");
+	ncPrintHex(1, (uint64_t)&data);
+	ncNewline(1);
+	ncPrint(1, "  bss: 0x");
+	ncPrintHex(1, (uint64_t)&bss);
+	ncNewline(1);
 
-	ncPrint("[Done]");
-	ncNewline();
-	ncNewline();
+	ncPrint(1, "[Done]");
+	ncNewline(1);
+	ncNewline(1);
 	return getStackBase();
+}
+
+void prueba() {
+	
 }
 
 int main()
 {	
 	load_idt();
-	ncPrint("[Kernel Main]");
-	ncNewline();
-	ncPrint("  Sample code module at 0x");
-	ncPrintHex((uint64_t)sampleCodeModuleAddress);
-	ncNewline();
-	ncPrint("  Calling the sample code module returned: ");
+	ncPrint(1, "[Kernel Main]");
+	ncNewline(1);
+	ncPrint(1, "  Sample code module at 0x");
+	ncPrintHex(1, (uint64_t)sampleCodeModuleAddress);
+	ncNewline(1);
+	ncPrint(1, "  Calling the sample code module returned: ");
+
+	ncStarSplitScreen();
+	for (int i = 0; i < 980; i++) {
+		if (i == 973) {
+			prueba();
+		}
+		ncPrintColorfulChar(3, i%10 + '0', BLACK, WHITE);
+	}
+	for (int i = 0; i < 10; i++) {
+		ncPrintColorfulChar(5, 'b', BLACK, WHITE);
+		ncNewline(5);
+	}
 	// ACÁ ESTÁ EL LLAMADO A MAIN. Se castea el puntero a función y se salta con (). Luego se imprime el valor de retorno.
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
-	ncNewline();
-	ncNewline();
+	// ncPrintHex(1, ((EntryPoint)sampleCodeModuleAddress)());
+	// ncNewline(1);
+	// ncNewline(1);
 
-	ncPrint("  Sample data module at 0x");
-	ncPrintHex((uint64_t)sampleDataModuleAddress);
-	ncNewline();
-	ncPrint("  Sample data module contents: ");
-	ncPrint((char*)sampleDataModuleAddress);
-	ncNewline();
+	// ncPrint(1, "  Sample data module at 0x");
+	// ncPrintHex(1, (uint64_t)sampleDataModuleAddress);
+	// ncNewline(1);
+	// ncPrint(1, "  Sample data module contents: ");
+	// ncPrint(1, (char*)sampleDataModuleAddress);
+	// ncNewline(1);
 
-	ncPrint("[Finished]");
+	// ncPrint(1, "[Finished]");
 	return 0;
 }

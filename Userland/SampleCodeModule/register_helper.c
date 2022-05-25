@@ -7,17 +7,17 @@
 static char * register_names[] = {"RAX=", "RBX=", "RCX=", "RDX=", "RBP=", "RDI=", "RSI=", "RSP=",
                                   " R8=", " R9=", "R10=", "R11=", "R12=", "R13=", "R14=", "R15="};
 
-void print_regs(uint64_t registers[]) {
+void print_regs(unsigned int fd, uint64_t registers[]) {
     char buffer[17];
     for (int i = 0; i < REGITER_COUNT; i++) {
-        write(1, register_names[i], REGISTER_NAME_LEN);
+        write(fd, register_names[i], REGISTER_NAME_LEN);
 
         int digits = uint_to_base(registers[i], buffer, 16);
         for (int j = 0; j < 16 - digits; j++) {
-            write(1, "0", 1);
+            write(fd, "0", 1);
         }
-        write(1, buffer, digits);
-        write(1, "\n", 1);
+        write(fd, buffer, digits);
+        write(fd, "\n", 1);
     }
     return;
 }

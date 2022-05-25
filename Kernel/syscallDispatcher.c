@@ -25,16 +25,18 @@ int sys_write(unsigned int fd, const char * buf, unsigned int count) {
     int i;
     for (i = 0; i < count; i++) {
         if(buf[i] == '\n'){
-            ncNewline();
+            ncNewline(fd);
         }
         else if(buf[i] == '\t'){
-            ncPrint("    ");
+            ncPrint(fd, "    ");
         }
         else if(buf[i] == 8){
-            ncBackspace();
+            if (fd == 1) {
+                ncBackspace();
+            }
         }
         else{
-            ncPrintColorfulChar(buf[i], foreground, background);
+            ncPrintColorfulChar(fd, buf[i], foreground, background);
         }
     }
     return i;
@@ -65,15 +67,16 @@ int sys_seconds_elapsed(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
 
 int sys_datetime(uint64_t * info, uint64_t rsi, uint64_t rdx){
     for(int i = 0; i < 6; i++){
-        info[i] = realtime[i]();
+        uint64_t aux = realtime[i]();
+        info[i] = aux;
     }
     return 1;
 }
 
-int sys_print_byte_from_mem(uint8_t * address, uint64_t rsi, uint64_t rdx) {
-    ncPrint("0x");
-    ncPrintHex((uint64_t) address);
-    ncPrint("=");
+int sys_print_byte_from_mem(unsigned int fd, uint8_t * address, uint64_t rdx) {
+    ncPrint(fd, "0x");
+    ncPrintHex(fd, (uint64_t) address);
+    ncPrint(fd, "=");
     
     int n = *address;
     int digits = 0;
@@ -83,8 +86,8 @@ int sys_print_byte_from_mem(uint8_t * address, uint64_t rsi, uint64_t rdx) {
     }
 
     if (digits <= 1) {
-        ncPrint("0");
+        ncPrint(fd, "0");
     }
-    ncPrintHex(*address);
+    ncPrintHex(fd, *address);
     return 1;
 }

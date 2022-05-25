@@ -22,10 +22,11 @@ void exceptionDispatcher(int exception) {
 	}
 }
 
+//CAMBIAR ESTO
 static void excepHandler(char * msg){
-	ncPrintColorful(msg, RED, WHITE);
-	ncColorfulNewline(WHITE);
-	ncPrintColorful("Presione enter para continuar", RED, WHITE);
+	ncPrintColorful(1 ,msg, RED, WHITE);
+	ncColorfulNewline(1, WHITE);
+	ncPrintColorful(1, "Presione enter para continuar", RED, WHITE);
 	char c[1];
 	do{
 		_hlt();		// halts the central processing unit until the next external interrupt is fired.

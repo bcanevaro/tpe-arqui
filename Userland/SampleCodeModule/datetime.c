@@ -1,7 +1,7 @@
 #include <syscalls.h>
 #include <libc.h>
 
-void datetime(){
+void datetime(unsigned int fd) {
     uint64_t realtime[6];
     system_datetime(realtime);
     // TODO -> tener en cuenta los días y eso.
@@ -28,17 +28,17 @@ void datetime(){
     num_to_str(realtime[3], str_day, day_len);
     num_to_str(realtime[4], str_month, month_len);
     num_to_str(realtime[5], str_year, year_len);
-    write(1, str_day, strlen(str_day));
-    write(1, "-", 1);
-    write(1, str_month, strlen(str_month));
-    write(1, "-", 1);
-    write(1, str_year, strlen(str_year));
-    write(1, "\t", 1);
-    write(1, str_hours, strlen(str_hours));
-    write(1, ":", 1);
-    write(1, str_minutes, strlen(str_minutes));
-    write(1, ":", 1);
-    write(1, str_seconds, strlen(str_seconds));
-    write(1, "\n", 1);
+    write(fd, str_day, strlen(str_day));
+    write(fd, "-", 1);
+    write(fd, str_month, strlen(str_month));
+    write(fd, "-", 1);
+    write(fd, str_year, strlen(str_year));
+    write(fd, "\t", 1);
+    write(fd, str_hours, strlen(str_hours));
+    write(fd, ":", 1);
+    write(fd, str_minutes, strlen(str_minutes));
+    write(fd, ":", 1);
+    write(fd, str_seconds, strlen(str_seconds));
+    write(fd, "\n", 1);
     return;
 }

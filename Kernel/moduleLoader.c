@@ -16,23 +16,24 @@ void loadModules(void * payloadStart, void ** targetModuleAddress)
 		loadModule(&currentModule, targetModuleAddress[i]);
 }
 
+//CAMBIAR ESTO
 static void loadModule(uint8_t ** module, void * targetModuleAddress)
 {
 	uint32_t moduleSize = readUint32(module);
 
-	ncPrint("  Will copy module at 0x");
-	ncPrintHex((uint64_t)*module);
-	ncPrint(" to 0x");
-	ncPrintHex((uint64_t)targetModuleAddress);
-	ncPrint(" (");
-	ncPrintDec(moduleSize);
-	ncPrint(" bytes)");
+	ncPrint(1, "  Will copy module at 0x");
+	ncPrintHex(1, (uint64_t)*module);
+	ncPrint(1, " to 0x");
+	ncPrintHex(1, (uint64_t)targetModuleAddress);
+	ncPrint(1, " (");
+	ncPrintDec(1, moduleSize);
+	ncPrint(1, " bytes)");
 
 	memcpy(targetModuleAddress, *module, moduleSize);
 	*module += moduleSize;
 
-	ncPrint(" [Done]");
-	ncNewline();
+	ncPrint(1, " [Done]");
+	ncNewline(1);
 }
 
 static uint32_t readUint32(uint8_t ** address)

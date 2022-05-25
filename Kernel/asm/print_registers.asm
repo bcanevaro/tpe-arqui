@@ -8,6 +8,8 @@ EXTERN main
 EXTERN getStackBase
 section .text
 
+; CAMBIAR TODO ESTO
+
 continue_execution:
     call getStackBase	        ; Get thet stack address
 	mov rsp, rax			; Set up the stack with the returned address

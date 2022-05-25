@@ -1,6 +1,6 @@
 #ifndef PRIMES_H
 
 #define PRIMES_H
-void primes();
+void primes(unsigned int fd);
 
 #endif

@@ -21,24 +21,26 @@ typedef int color;
 #define YELLOW 0xE
 #define WHITE 0xF
 
-void ncPrintColorfulChar(char c, color foreground, color background);
-void ncPrintColorful(char * str, color foreground, color background);
-void ncPrintColorfulDec(uint64_t value, color foreground, color background);
-void ncPrintColorfulHex(uint64_t value , color foreground, color background);
-void ncPrintColorfulBin(uint64_t value, color foreground, color background);
-void ncPrintColorfulBase(uint64_t value, uint32_t base, color foreground, color background);
-void ncColorfulNewline(color background);
+void ncPrintColorfulChar(int fd, char c, color foreground, color background);
+void ncPrintColorful(int fd, char * str, color foreground, color background);
+void ncPrintColorfulDec(int fd, uint64_t value, color foreground, color background);
+void ncPrintColorfulHex(int fd, uint64_t value , color foreground, color background);
+void ncPrintColorfulBin(int fd, uint64_t value, color foreground, color background);
+void ncPrintColorfulBase(int fd, uint64_t value, uint32_t base, color foreground, color background);
+void ncColorfulNewline(int fd, color background);
 
 void printRegisterFormat(uint64_t reg);
 
-void ncPrint(const char * string);
-void ncPrintChar(char character);
-void ncNewline();
-void ncPrintDec(uint64_t value);
-void ncPrintHex(uint64_t value);
-void ncPrintBin(uint64_t value);
-void ncPrintBase(uint64_t value, uint32_t base);
+void ncPrint(int fd, const char * string);
+void ncPrintChar(int fd, char character);
+void ncNewline(int fd);
+void ncPrintDec(int fd, uint64_t value);
+void ncPrintHex(int fd, uint64_t value);
+void ncPrintBin(int fd, uint64_t value);
+void ncPrintBase(int fd, uint64_t value, uint32_t base);
 void ncClear();
 void ncBackspace();
+
+void ncStarSplitScreen();
 
 #endif

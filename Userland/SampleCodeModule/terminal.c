@@ -16,7 +16,7 @@ static char print_memory[] = "printmem ";
 static char * commands[]={"help", "divide_by_zero", "invalid_opcode", "inforeg",  
                             "fibonacci", "primes", "datetime", "clear"};
 
-typedef void (*Command)(void);
+typedef void (*Command)(unsigned int);
 static Command commands_functions[] = {&help, &divide_by_zero, &invalid_opcode, &inforeg,  
                                         &fibonacci, &primes, &datetime, &clear};
 
@@ -73,7 +73,7 @@ void terminal(){
         int found = 0;
         for(int i = 0; !found && i < COMMS_LEN - 1; i++){
             if(strcmp(buffer, commands[i]) == 0){
-                commands_functions[i]();
+                commands_functions[i](1);
                 found = 1;
             }
         }
@@ -93,7 +93,7 @@ void terminal(){
                     mem_address[j] = buffer[i];
                 }
                 mem_address[j] = 0;
-                print_mem(mem_address);
+                print_mem(1, mem_address);
             }else{
                 error();
             }
