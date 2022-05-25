@@ -41,6 +41,6 @@ void ncPrintBase(int fd, uint64_t value, uint32_t base);
 void ncClear();
 void ncBackspace();
 
-void ncStarSplitScreen();
+void ncStartSplitScreen();
 
 #endif

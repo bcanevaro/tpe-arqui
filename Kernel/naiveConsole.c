@@ -29,7 +29,8 @@ static uint8_t * ncGetPosition(int x, int y) {
 	return video + width * 2 * x + y * 2;
 }
 
-void ncStarSplitScreen() {
+void ncStartSplitScreen() {
+	ncClear();
 	for (int i = 0; i < height; i++) {
 		uint8_t * ad = ncGetPosition(i, semi_width);
 		*(ad) = '|';
@@ -145,7 +146,7 @@ void scrollCompleteScreen() {
 
 void scrollLeft() {
 	uint8_t * currentVideoAux = video + width * 2;
-	for (int i = 0; currentVideoAux <= currentLeft; currentVideoAux++, i++) {
+	for (int i = 0; currentVideoAux < currentLeft; currentVideoAux++, i++) {
 		if (i % (width * 2) == semi_width * 2) {
 			currentVideoAux += 82;
 			i += 82;
@@ -154,9 +155,26 @@ void scrollLeft() {
 	}
 	currentLeft = currentLeft - semi_width * 2;
 	uint8_t * currentVideoAux2 = currentLeft;
-	for (int i = 0; currentVideoAux2 <= currentVideoAux; currentVideoAux2 += 2, i += 2) {
+	for (int i = 0; currentVideoAux2 < currentVideoAux; currentVideoAux2 += 2, i += 2) {
 		currentLeft[i] = ' ';
 		currentLeft[i + 1] = ( 0x00 | BLACK ) << 4 | L_GRAY;
+	}
+}
+
+void scrollRight() {
+	uint8_t * currentVideoAux = right + width * 2;
+	for (int i = 82; currentVideoAux < currentRight; currentVideoAux++, i++) {
+		if (i % (width * 2) == 0) {
+			currentVideoAux += 82;
+			i += 82;
+		}
+		video[i] = *currentVideoAux;
+	}
+	currentRight = currentRight - semi_width * 2;
+	uint8_t * currentVideoAux2 = currentRight;
+	for (int i = 0; currentVideoAux2 < currentVideoAux; currentVideoAux2 += 2, i += 2) {
+		currentRight[i] = ' ';
+		currentRight[i + 1] = ( 0x00 | BLACK ) << 4 | L_GRAY;
 	}
 }
  
@@ -165,11 +183,10 @@ void ncPrintColorfulChar(int fd, char c, color foreground, color background) {
 		scrollCompleteScreen();
 	} else if ((fd == 3 || fd == 4) && leftVerticalIndex == height - 1 && leftIndex == semi_width) {
 		scrollLeft();
-		leftVerticalIndex--;
 		leftIndex = 0;
 	} else if ((fd == 5 || fd == 6) && rightVerticalIndex == height - 1 && rightIndex == semi_width) {
-		// scrollRight();	
-		rightVerticalIndex--;
+		scrollRight();
+		rightIndex = 0;	
 	}
 	if (fd == 1) {
 		*currentVideo = c;

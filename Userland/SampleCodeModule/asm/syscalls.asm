@@ -4,6 +4,7 @@ GLOBAL clear_screen
 GLOBAL seconds_elapsed
 GLOBAL system_datetime
 GLOBAL print_byte_from_mem
+GLOBAL start_split_screen
 
 section .text
 
@@ -58,6 +59,15 @@ print_byte_from_mem:
     enter 0, 0
 
     mov rax, 0x05
+    int 80h
+
+    leave
+    ret
+
+start_split_screen:
+    enter 0, 0
+
+    mov rax, 0x06
     int 80h
 
     leave

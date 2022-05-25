@@ -83,7 +83,7 @@ void * initializeKernelBinary()
 }
 
 void prueba() {
-	
+
 }
 
 int main()
@@ -95,30 +95,18 @@ int main()
 	ncPrintHex(1, (uint64_t)sampleCodeModuleAddress);
 	ncNewline(1);
 	ncPrint(1, "  Calling the sample code module returned: ");
-
-	ncStarSplitScreen();
-	for (int i = 0; i < 980; i++) {
-		if (i == 973) {
-			prueba();
-		}
-		ncPrintColorfulChar(3, i%10 + '0', BLACK, WHITE);
-	}
-	for (int i = 0; i < 10; i++) {
-		ncPrintColorfulChar(5, 'b', BLACK, WHITE);
-		ncNewline(5);
-	}
 	// ACÁ ESTÁ EL LLAMADO A MAIN. Se castea el puntero a función y se salta con (). Luego se imprime el valor de retorno.
-	// ncPrintHex(1, ((EntryPoint)sampleCodeModuleAddress)());
-	// ncNewline(1);
-	// ncNewline(1);
+	ncPrintHex(1, ((EntryPoint)sampleCodeModuleAddress)());
+	ncNewline(1);
+	ncNewline(1);
 
-	// ncPrint(1, "  Sample data module at 0x");
-	// ncPrintHex(1, (uint64_t)sampleDataModuleAddress);
-	// ncNewline(1);
-	// ncPrint(1, "  Sample data module contents: ");
-	// ncPrint(1, (char*)sampleDataModuleAddress);
-	// ncNewline(1);
+	ncPrint(1, "  Sample data module at 0x");
+	ncPrintHex(1, (uint64_t)sampleDataModuleAddress);
+	ncNewline(1);
+	ncPrint(1, "  Sample data module contents: ");
+	ncPrint(1, (char*)sampleDataModuleAddress);
+	ncNewline(1);
 
-	// ncPrint(1, "[Finished]");
+	ncPrint(1, "[Finished]");
 	return 0;
 }
