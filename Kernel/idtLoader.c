@@ -22,6 +22,7 @@ DESCR_INT * idt = (DESCR_INT *) 0;	// IDT de 255 entradas
 
 static void setup_IDT_entry (int index, uint64_t offset);
 
+
 // Funcion que carga la IDT: Interrupt Descriptor Table
 void load_idt() {
   // Desactivo todas las interrupciones
@@ -43,7 +44,8 @@ void load_idt() {
 
 
   //Solo interrupcion timer tick habilitadas
-  picMasterMask(0xFD); 
+  //cambiar esto
+  picMasterMask(0x00); 
   picSlaveMask(0xFF);
       
   // Activo todas las interrupciones

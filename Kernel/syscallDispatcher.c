@@ -5,6 +5,7 @@
 #include <keyboard.h>
 #include <syscallDispatcher.h>
 #include <functions.h>
+#include <scheduler.h>
 
 typedef int (*sys_call)(unsigned int, char *, unsigned int);
 static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime, &sys_print_byte_from_mem, &sys_start_split_screen};
@@ -92,7 +93,12 @@ int sys_print_byte_from_mem(unsigned int fd, uint8_t * address, uint64_t rdx) {
     return 1;
 }
 
-int sys_start_split_screen(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
-    ncStartSplitScreen();
+int sys_start_split_screen(uint64_t functions[], arguments * args_f1, arguments * args_f2) {
+    if(functions != 0 && functions[0] != 0 && functions[1] != 0) {
+        ncStartSplitScreen();
+        int pid_left = load_processes(functions[0],args_f1->integer,args_f1->string);
+        int pid_right = load_processes(functions[1],args_f2->integer,args_f2->string);
+        activate_scheduler();
+    }
     return 1;
 }

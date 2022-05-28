@@ -1,9 +1,8 @@
-GLOBAL initizalize_process
-GLOBAL get_rsp
+GLOBAL initialize_process
 GLOBAL run_process
 GLOBAL stop_process
 
-; uint64_t initialize_process(uint64_t stack_base, uint64_t rip);
+; uint64_t initialize_process(uint64_t stack_base, uint64_t rip, int fd, char * string);
 initialize_process: 
     enter 0, 0 
 
@@ -13,6 +12,8 @@ initialize_process:
     push 0x200  ; Registro de flags. El 200 pone en 1 el flag de interrupcion.
     push 0x8    ; CS (Code Segment)    
     push rsi    ; RIP
+	mov rdi,rdx ;le pasamos fd al primer argumento
+	mov rsi,rcx ;le pasamos string al segundo argumento
     ; Pusheamos todos los registros para guardar contexto
     push rax
 	push rbx
@@ -38,15 +39,33 @@ initialize_process:
 ; uint64_t stop_process(uint64_t current_rsp, uint64_t rip);
 stop_process:
     enter 0, 0
-    call initialize_process
+    mov rsp, rdi
+    push 0x00   ; SS (Stack Segment)
+    push rdi    ; RSP 
+    push 0x200  ; Registro de flags. El 200 pone en 1 el flag de interrupcion.
+    push 0x8    ; CS (Code Segment)    
+    push rsi    ; RIP
+    ; Pusheamos todos los registros para guardar contexto
+    push rax
+	push rbx
+	push rcx
+	push rdx
+	push rbp
+	push rdi
+	push rsi
+	push r8
+	push r9
+	push r10
+	push r11
+	push r12
+	push r13
+	push r14
+	push r15
+    ; Retornamos el SP (Stack Pointer)
+    mov rax, rsp
     leave
     ret
 
-
-; uint64_t get_rsp();
-get_rsp: 
-    mov rax, rsp
-    ret
 
 ; void run_process(uint64_t rsp);
 run_process:

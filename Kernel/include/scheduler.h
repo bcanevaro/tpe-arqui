@@ -1,7 +1,10 @@
 #ifndef _SCHEDULER_H_
 #define _SCHEDULER_H_
 #include <stdint.h>
+#include <schedulerfunctions.h>
 #define NUM_PROCESSES 2
+#define STACK_BASE 0x450000
+#define PROCESS_SIZE ( 8 * 1024 )
 // Puntero a funcion
 typedef void (*function)(int);
 
@@ -10,13 +13,14 @@ typedef struct {
     uint64_t stack_base;
     uint64_t rip; //RIP cuando se corta la funcion
     uint64_t rsp; //RIP cuando se corta la funcion
+    char active;
 } task;
 
-static task processes[NUM_PROCESSES];
 
-uint64_t initialize_process(uint64_t stack_base, uint64_t rip);
-uint64_t stop_process(uint64_t current_rsp, uint64_t rip);
-uint64_t get_rsp();
-void run_process(uint64_t rsp);
+int load_processes(uint64_t rip, int fd, char * string);
+void exec_process(int pid);
+void scheduler(void);
+void activate_scheduler(void);
+char is_scheduler_active(void);
 
 #endif

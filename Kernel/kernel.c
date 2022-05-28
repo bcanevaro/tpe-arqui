@@ -82,10 +82,6 @@ void * initializeKernelBinary()
 	return getStackBase();
 }
 
-void prueba() {
-
-}
-
 int main()
 {	
 	load_idt();

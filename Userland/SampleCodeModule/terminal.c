@@ -70,10 +70,17 @@ void terminal(){
     if(pipe == 1){
         // Llamar a una syscall para pasar a kernel dos punteros a funcion
         // que representan los dos procesos a correr en simultaneo.
-        //  (vector con dos putneros a funcion, arg de la func1, arg de la func2)
-        //  (vector con dos putneros a funcion, vector args defunc1, vector args de func2)
-        // los ultimos dos vectores que contienen argumentos tienen que ser null terminated.
-        
+        //  (vector con dos putneros a funcion, puntero de struct de args de func1, puntero de struct de args de func2)
+        arguments arguments_left = {
+            .integer = 3,
+            .string = -1
+        };
+        arguments arguments_right = {
+            .integer = 5,
+            .string = -1
+        };
+        uint64_t functions[] = {&help,&primes};
+        start_split_screen(functions,&arguments_left,&arguments_right);
     }else if(pipe == 0){
         int found = 0;
         for(int i = 0; !found && i < COMMS_LEN - 1; i++){

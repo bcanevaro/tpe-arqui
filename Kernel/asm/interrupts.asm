@@ -22,6 +22,9 @@ EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN syscallDispatcher
 
+GLOBAL get_current_rip
+GLOBAL get_current_rsp
+
 SECTION .text
 
 %macro pushState 0
@@ -74,8 +77,6 @@ SECTION .text
 	iretq
 %endmacro
 
-
-
 %macro exceptionHandler 1
 	pushState
 
@@ -122,7 +123,20 @@ picSlaveMask:
 
 ;8254 Timer (Timer Tick)
 _irq00Handler:
-	irqHandlerMaster 0
+	mov [current_rip],rsp
+	add rsp,24
+	mov [current_rsp],rsp
+	sub rsp,24
+	pushState	
+	mov rdi, 0x00 ; pasaje de parametro
+	call irqDispatcher
+
+	; signal pic EOI (End of Interrupt)
+	mov al, 20h
+	out 20h, al
+
+	popState
+	iretq
 
 ;Keyboard
 _irq01Handler:
@@ -186,7 +200,19 @@ haltcpu:
 	hlt
 	ret
 
+get_current_rip:
+	enter 0,0
+	mov rax,[current_rip]
+	leave
+	ret
+
+get_current_rsp:
+	enter 0,0
+	mov rax,[current_rsp]
+	leave
+	ret
 
 
 SECTION .bss
-	aux resq 1
+	current_rip resq 1
+	current_rsp resq 1
