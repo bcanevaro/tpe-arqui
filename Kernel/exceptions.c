@@ -28,7 +28,7 @@ void exceptionDispatcher(int exception, uint64_t * registers) {
 	}
 }
 
-//CAMBIAR ESTO
+// FALTA QUE IMPRIMA LA EXCEPCION DE CADA LADO
 static void excepHandler(char * msg, uint64_t * registers){
 	ncPrint(2, msg);
 	ncNewline(2);

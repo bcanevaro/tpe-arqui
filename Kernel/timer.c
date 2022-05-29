@@ -4,12 +4,9 @@
 static unsigned long ticks = 0;
 static char first_scheduler_call = 1;
 
-void prueba(){}
-
 void timer_handler() {
 	ticks++;
 	if(is_scheduler_active()) {
-		prueba();
 		if(first_scheduler_call) {
 			first_scheduler_call = 0;
 			exec_process(0);

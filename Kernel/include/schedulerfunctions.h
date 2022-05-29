@@ -4,6 +4,6 @@
 #include <stdint.h>
 
 uint64_t initialize_process(uint64_t stack_base, uint64_t rip, int fd, char * string);
-uint64_t stop_process(uint64_t current_rsp, uint64_t rip);
+uint64_t stop_process(uint64_t current_rsp, uint64_t rip, uint64_t * current_gp_registers);
 void run_process(uint64_t rsp);
 #endif

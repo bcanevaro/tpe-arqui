@@ -16,7 +16,6 @@ void loadModules(void * payloadStart, void ** targetModuleAddress)
 		loadModule(&currentModule, targetModuleAddress[i]);
 }
 
-//CAMBIAR ESTO
 static void loadModule(uint8_t ** module, void * targetModuleAddress)
 {
 	uint32_t moduleSize = readUint32(module);

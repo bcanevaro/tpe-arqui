@@ -258,7 +258,6 @@ void ncColorfulNewline(int fd, color background) {
 	} while (condition);
 }
 
-// CAMBIAR ESTO
 void printRegisterFormat(int fd, uint64_t reg){
     uint64_t aux = reg;
     uint64_t zeroes =  16;

@@ -78,9 +78,9 @@ void terminal(){
         };
         arguments arguments_right = {
             .integer = 5,
-            .string = -1
+            .string = "0x500000"
         };
-        uint64_t functions[] = {&help,&primes};
+        uint64_t functions[] = {&primes,&print_mem};
         start_split_screen(functions,&arguments_left,&arguments_right);
     }else if(pipe == 0){
         int found = 0;

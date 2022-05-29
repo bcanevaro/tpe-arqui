@@ -1,8 +1,6 @@
 #include <syscalls.h>
 #include <libc.h>
 
-int stop_help = 0;
-
 void help(unsigned int fd){
     char welcome_message[] = "CFL (Canevaro Flores Llanos) Kernel, version 1.0.\n";
     char programs_message[] = "Available programs:\n";

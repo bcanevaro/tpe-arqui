@@ -34,7 +34,6 @@ void * getStackBase()
 	);
 }
 
-//CAMBIAR ESTO
 void * initializeKernelBinary()
 {
 	char buffer[10];
