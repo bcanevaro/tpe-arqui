@@ -16,7 +16,7 @@ GLOBAL _irq80Handler
 
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
-EXTERN print_registers
+EXTERN load_registers
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -80,7 +80,8 @@ SECTION .text
 %macro exceptionHandler 1
 	pushState
 
-	call print_registers
+	call load_registers
+	mov rsi, rax
 
 	mov rdi, %1 ; pasaje de parametro
 	call exceptionDispatcher
@@ -119,7 +120,6 @@ picSlaveMask:
     out	0A1h,al
     pop     rbp
     retn
-
 
 ;8254 Timer (Timer Tick)
 _irq00Handler:
@@ -213,6 +213,6 @@ get_current_rsp:
 	ret
 
 
-SECTION .bss
+section .bss
 	current_rip resq 1
 	current_rsp resq 1

@@ -29,7 +29,7 @@ void ncPrintColorfulBin(int fd, uint64_t value, color foreground, color backgrou
 void ncPrintColorfulBase(int fd, uint64_t value, uint32_t base, color foreground, color background);
 void ncColorfulNewline(int fd, color background);
 
-void printRegisterFormat(uint64_t reg);
+void printRegisterFormat(int fd, uint64_t reg);
 
 void ncPrint(int fd, const char * string);
 void ncPrintChar(int fd, char character);

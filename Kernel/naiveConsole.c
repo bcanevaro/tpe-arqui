@@ -51,8 +51,12 @@ void ncPrint(int fd, const char * string)
 }
 
 void ncPrintChar(int fd, char character)
-{
-	ncPrintColorfulChar(fd, character, L_GRAY, BLACK);
+{	
+	color foreground = L_GRAY;
+	if (fd == 2 || fd == 4 || fd == 6) {
+		foreground = RED;
+	}
+	ncPrintColorfulChar(fd, character, foreground, BLACK);
 }
 
 void ncNewline(int fd)
@@ -188,11 +192,11 @@ void ncPrintColorfulChar(int fd, char c, color foreground, color background) {
 		scrollRight();
 		rightIndex = 0;	
 	}
-	if (fd == 1) {
+	if (fd == 1 || fd == 2) {
 		*currentVideo = c;
 		*(currentVideo + 1) = ( 0x00 | background ) << 4 | foreground;
 		currentVideo += 2;
-	} else if (fd == 3) {
+	} else if (fd == 3 || fd == 4) {
 		if (leftIndex == semi_width) {
 			currentLeft += 82;
 			leftIndex = 0;
@@ -202,7 +206,7 @@ void ncPrintColorfulChar(int fd, char c, color foreground, color background) {
 		*(currentLeft + 1) = ( 0x00 | background ) << 4 | foreground;
 		currentLeft += 2;
 		leftIndex++;
-	} else if (fd == 5) {
+	} else if (fd == 5 || fd == 6) {
 		if (rightIndex == semi_width) {
 			currentRight += 82;
 			rightIndex = 0;
@@ -255,7 +259,7 @@ void ncColorfulNewline(int fd, color background) {
 }
 
 // CAMBIAR ESTO
-void printRegisterFormat(uint64_t reg){
+void printRegisterFormat(int fd, uint64_t reg){
     uint64_t aux = reg;
     uint64_t zeroes =  16;
     
@@ -265,10 +269,10 @@ void printRegisterFormat(uint64_t reg){
     }
 
     for(int i = 0; i < zeroes; i++){
-       ncPrintColorfulChar(1, '0', RED, WHITE);
+       ncPrintChar(fd, '0');
     }
   
     if (reg) {
-       ncPrintColorfulHex(1, reg, RED, WHITE);
+       ncPrintHex(fd, reg);
     }
 }

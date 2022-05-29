@@ -53,7 +53,8 @@ void terminal(){
                     write(1, letter, 1); 
                     i--;
                 }
-            }else{
+            } else if (letter[0] == '\t') {
+            } else {
                 write(1, letter, 1); 
                 if(letter[0] == '|'){
                     pipe++;
