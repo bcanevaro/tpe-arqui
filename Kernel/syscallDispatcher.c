@@ -8,7 +8,7 @@
 #include <scheduler.h>
 
 typedef int (*sys_call)(unsigned int, char *, unsigned int);
-static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime, &sys_print_byte_from_mem, &sys_start_split_screen};
+static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime, &sys_print_byte_from_mem, &sys_start_split_screen, &sys_load_process, &sys_hibernate_process};
 
 typedef uint8_t (*rtc_argument)(void);
 static rtc_argument realtime[] = {&rtc_seconds, &rtc_minutes, &rtc_hours, &rtc_day, &rtc_month, &rtc_year};
@@ -93,12 +93,28 @@ int sys_print_byte_from_mem(unsigned int fd, uint8_t * address, uint64_t rdx) {
     return 1;
 }
 
-int sys_start_split_screen(uint64_t functions[], arguments * args_f1, arguments * args_f2) {
-    if(functions != 0 && functions[0] != 0 && functions[1] != 0) {
-        ncStartSplitScreen();
-        int pid_left = load_processes(functions[0],args_f1->integer,args_f1->string);
-        int pid_right = load_processes(functions[1],args_f2->integer,args_f2->string);
-        activate_scheduler();
-    }
+int sys_start_split_screen(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
+    // if(functions != 0 && functions[0] != 0 && functions[1] != 0) {
+    ncStartSplitScreen();
+    //     int pid_left = es(functions[0],args_f1->integer,args_f1->string);
+    //     int pid_right = load_processes(functions[1],args_f2->integer,args_f2->string);
+    //     activate_scheduler();
+    // }
     return 1;
 }
+
+// Load Process
+int sys_load_process(uint64_t function, arguments * args_function, uint64_t rdx) {
+    int pid = -1;
+    if(function != 0 && args_function != 0) {
+        pid = load_processes(function, args_function->integer, args_function->string);
+    }
+    return pid;
+}
+
+// Pause Process (para terminal y userland. se corre demas programas y quedan en
+// estado de hibernacion)
+int sys_hibernate_process(int pid, uint64_t rsi, uint64_t rdx) {
+    return hibernate_process(pid);
+}
+

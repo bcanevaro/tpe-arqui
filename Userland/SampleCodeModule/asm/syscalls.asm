@@ -5,6 +5,9 @@ GLOBAL seconds_elapsed
 GLOBAL system_datetime
 GLOBAL print_byte_from_mem
 GLOBAL start_split_screen
+GLOBAL load_process
+GLOBAL hibernate_process
+GLOBAL _hlt
 
 section .text
 
@@ -72,3 +75,26 @@ start_split_screen:
 
     leave
     ret
+
+load_process:
+    enter 0, 0
+
+    mov rax, 0x07
+    int 80h
+
+    leave
+    ret
+
+hibernate_process:
+    enter 0, 0
+
+    mov rax, 0x08
+    int 80h
+
+    leave
+    ret
+
+_hlt:
+	sti
+	hlt
+	ret

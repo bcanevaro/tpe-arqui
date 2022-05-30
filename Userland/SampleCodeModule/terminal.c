@@ -78,18 +78,26 @@ void terminal(){
         };
         arguments arguments_right = {
             .integer = 5,
-            .string = "0x500000"
+            .string = -1
         };
-        uint64_t functions[] = {&primes,&print_mem};
-        start_split_screen(functions,&arguments_left,&arguments_right);
+        // uint64_t functions[] = {&primes,&print_mem};
+        // start_split_screen(functions,&arguments_left,&arguments_right);
+        // arguments function_arguments = {1, -1};
+        start_split_screen();
+        load_process(&primes, &arguments_left);
+        load_process(&primes, &arguments_right);
+        hibernate_process(1);
     }else if(pipe == 0){
         int found = 0;
         for(int i = 0; !found && i < COMMS_LEN - 1; i++){
             if(strcmp(buffer, commands[i]) == 0){
-                commands_functions[i](1);
+                arguments function_arguments = {1, -1};
+                load_process(commands_functions[i], &function_arguments);
+                hibernate_process(1);
                 found = 1;
             }
         }
+        // Esto es para print_mem.
         if(!found){ // Si no es ninguno de los comandos guardados en el vector command_functions
             int is_print_mem = 1;
             int i;
@@ -106,7 +114,10 @@ void terminal(){
                     mem_address[j] = buffer[i];
                 }
                 mem_address[j] = 0;
-                print_mem(1, mem_address);
+                hibernate_process(1);
+                arguments function_arguments = {1, mem_address};
+                load_process(&print_mem, &function_arguments);
+                // print_mem(1, mem_address);
             }else{
                 error();
             }

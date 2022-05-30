@@ -1,16 +1,26 @@
 #include <syscalls.h>
 #include <divide_by_zero.h>
+#include <terminal.h>
+
 
 extern void invalid_opcode();
 
 static int var1 = 0;
 static int var2 = 0;
 
+void infinite_terminal(){
+	do{
+		_hlt();
+		terminal();
+	}while(1);
+}
+
 int main() {
 	clear_screen();
-	while(1){
-		terminal();
-	}
+	arguments terminal_arguments = {-1,-1};
+	hibernate_process(0);
+	load_process(&infinite_terminal, &terminal_arguments);
+	
 	// write(1, "HOLA", 4);
 	// char hola[1];
 	// int ret = 0;

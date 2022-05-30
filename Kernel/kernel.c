@@ -4,6 +4,7 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <idtLoader.h>
+#include <scheduler.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -84,24 +85,30 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
-	ncPrint(1, "[Kernel Main]");
-	ncNewline(1);
-	ncPrint(1, "  Sample code module at 0x");
-	ncPrintHex(1, (uint64_t)sampleCodeModuleAddress);
-	ncNewline(1);
-	ncPrint(1, "  Calling the sample code module returned: ");
+	// ncPrint(1, "[Kernel Main]");
+	// ncNewline(1);
+	// ncPrint(1, "  Sample code module at 0x");
+	// ncPrintHex(1, (uint64_t)sampleCodeModuleAddress);
+	// ncNewline(1);
+	// ncPrint(1, "  Calling the sample code module returned: ");
+
+	// ncPrintHex(1, ((EntryPoint)sampleCodeModuleAddress)());
+	// ncNewline(1);
+	// ncNewline(1);
+
+	// ncPrint(1, "  Sample data module at 0x");
+	// ncPrintHex(1, (uint64_t)sampleDataModuleAddress);
+	// ncNewline(1);
+	// ncPrint(1, "  Sample data module contents: ");
+	// ncPrint(1, (char*)sampleDataModuleAddress);
+	// ncNewline(1);
+
+	// ncPrint(1, "[Finished]");
+
 	// ACÁ ESTÁ EL LLAMADO A MAIN. Se castea el puntero a función y se salta con (). Luego se imprime el valor de retorno.
-	ncPrintHex(1, ((EntryPoint)sampleCodeModuleAddress)());
-	ncNewline(1);
-	ncNewline(1);
-
-	ncPrint(1, "  Sample data module at 0x");
-	ncPrintHex(1, (uint64_t)sampleDataModuleAddress);
-	ncNewline(1);
-	ncPrint(1, "  Sample data module contents: ");
-	ncPrint(1, (char*)sampleDataModuleAddress);
-	ncNewline(1);
-
-	ncPrint(1, "[Finished]");
+	// ACA DEBEMOS CREAR EL PROCESO DE SAMPLECODEMODULEADDRESS Y LUEGO EJECUTARLO PARA QUE ARRANQUE
+	// EL SCHEDULER
+	load_processes(((EntryPoint)sampleCodeModuleAddress), -1, -1);
+	while(1);
 	return 0;
 }
