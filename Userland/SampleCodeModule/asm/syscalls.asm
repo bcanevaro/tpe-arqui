@@ -7,7 +7,6 @@ GLOBAL print_byte_from_mem
 GLOBAL start_split_screen
 GLOBAL load_process
 GLOBAL hibernate_process
-GLOBAL _hlt
 
 section .text
 
@@ -93,8 +92,3 @@ hibernate_process:
 
     leave
     ret
-
-_hlt:
-	sti
-	hlt
-	ret

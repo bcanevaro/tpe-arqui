@@ -42,16 +42,9 @@ static void excepHandler(char * msg, uint64_t * registers){
 		}
     }
 	ncNewline(2);
-	ncNewline(2);
-	ncPrint(2, "Presione enter para continuar");
-	ncNewline(2);
 	ncPrint(2, separator);
-	char c[1];
-	do{
-		_hlt();		// halts the central processing unit until the next external interrupt is fired.
-	} while(sys_read(1, c, 1) != 1 || c[0] != '\n');
-	ncClear();
-	continue_execution();
+	// ncClear();
+	// continue_execution();
 }
 
 static void zero_division(uint64_t * registers) {

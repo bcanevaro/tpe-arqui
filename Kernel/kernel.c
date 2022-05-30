@@ -109,6 +109,7 @@ int main()
 	// ACA DEBEMOS CREAR EL PROCESO DE SAMPLECODEMODULEADDRESS Y LUEGO EJECUTARLO PARA QUE ARRANQUE
 	// EL SCHEDULER
 	load_processes(((EntryPoint)sampleCodeModuleAddress), -1, -1);
-	while(1);
+	_hlt();
+	// while(1);
 	return 0;
 }

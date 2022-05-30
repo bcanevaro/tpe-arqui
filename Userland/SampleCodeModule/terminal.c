@@ -2,9 +2,9 @@
 #include <libc.h>
 #include <help.h>
 #include <divide_by_zero.h>
-#include<invalid_opcode.h>
+#include <invalid_opcode.h>
 #include <inforeg.h>
-#include<fibonacci.h>
+#include <fibonacci.h>
 #include <primes.h>
 #include <datetime.h>
 #include <clear.h>
@@ -69,9 +69,6 @@ void terminal(){
         return; 
     }
     if(pipe == 1){
-        // Llamar a una syscall para pasar a kernel dos punteros a funcion
-        // que representan los dos procesos a correr en simultaneo.
-        //  (vector con dos putneros a funcion, puntero de struct de args de func1, puntero de struct de args de func2)
         arguments arguments_left = {
             .integer = 3,
             .string = -1
@@ -80,12 +77,9 @@ void terminal(){
             .integer = 5,
             .string = -1
         };
-        // uint64_t functions[] = {&primes,&print_mem};
-        // start_split_screen(functions,&arguments_left,&arguments_right);
-        // arguments function_arguments = {1, -1};
         start_split_screen();
-        load_process(&primes, &arguments_left);
-        load_process(&primes, &arguments_right);
+        load_process(&fibonacci, &arguments_left);
+        load_process(&fibonacci, &arguments_right);
         hibernate_process(1);
     }else if(pipe == 0){
         int found = 0;
@@ -114,10 +108,9 @@ void terminal(){
                     mem_address[j] = buffer[i];
                 }
                 mem_address[j] = 0;
-                hibernate_process(1);
                 arguments function_arguments = {1, mem_address};
                 load_process(&print_mem, &function_arguments);
-                // print_mem(1, mem_address);
+                hibernate_process(1);
             }else{
                 error();
             }

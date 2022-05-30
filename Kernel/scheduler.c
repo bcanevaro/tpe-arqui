@@ -1,5 +1,6 @@
 #include <scheduler.h>
 #include <interrupts.h>
+#include <naiveConsole.h>
 #include <schedulerfunctions.h>
 
 static task processes[NUM_PROCESSES];
@@ -12,18 +13,11 @@ static char scheduler_active = 0;
 #define PAUSED 0
 #define FINISHED -1
 
-void prueba(){}
 
 // Cuando llamamos al pipe se tiene que ejecutar la siguiente funcion;
 //Función que crea una task y la agrega al array processes
 //devuelve el pid
 int load_processes(uint64_t rip, int fd, char * string) {
-    
-    // if(process_qty < 2){
-    //     processes[process_qty++] = new_task;
-    //     return process_qty - 1;
-    // }
-    prueba();
     int found = 0;
     int i;
     for(i = 2; i < process_qty && !found; i++){
@@ -38,14 +32,13 @@ int load_processes(uint64_t rip, int fd, char * string) {
             .stack_base = STACK_BASE + PROCESS_SIZE * process_qty,
             .active = IDLE
         };
-        prueba();
         processes[process_qty++] = new_task;
         return process_qty - 1;
     }
     task new_task = {
         .rip = rip,
-        .rsp = initialize_process(STACK_BASE + PROCESS_SIZE * i, rip,fd,string),
-        .stack_base = STACK_BASE + PROCESS_SIZE * i,
+        .rsp = initialize_process(STACK_BASE + PROCESS_SIZE * (i-1), rip,fd,string),
+        .stack_base = STACK_BASE + PROCESS_SIZE * (i-1),
         .active = IDLE
     };
     processes[i - 1] = new_task;
@@ -56,9 +49,13 @@ void current_process_returned() {
     task current_task = processes[current_pid];
     current_task.active = FINISHED;
     processes[current_pid] = current_task;
+    if (current_pid >= 2) {
+        task terminal_task = processes[1];
+        terminal_task.active = IDLE;
+        processes[1] = terminal_task;
+    }
     current_pid = -1;
     scheduler();
-    process_qty--;
 }
 
 //Guarda la current task a ejecutar, teniendo en cuenta el pid que recibe como argumento
@@ -71,6 +68,8 @@ void exec_process(int pid){
     }
     task current_task = processes[pid];
     current_pid = pid;
+    current_task.active = ACTIVE;
+    processes[pid] = current_task;
     run_process(current_task.rsp);
     //Si llego aca, es porque el proceso terminó
     current_task.active = FINISHED;
@@ -103,9 +102,11 @@ int hibernate_process(int pid){
     if ( pid < 0 || pid >= process_qty ) {
         return 0;
     }
+    pause_process(pid);
     task current_task = processes[pid];
     current_task.active = PAUSED;
     processes[pid] = current_task;
+    exec_process(pid+1);
     return 1;
 }
 

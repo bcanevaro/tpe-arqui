@@ -10,7 +10,6 @@ static int var2 = 0;
 
 void infinite_terminal(){
 	do{
-		_hlt();
 		terminal();
 	}while(1);
 }
@@ -18,9 +17,8 @@ void infinite_terminal(){
 int main() {
 	clear_screen();
 	arguments terminal_arguments = {-1,-1};
-	hibernate_process(0);
 	load_process(&infinite_terminal, &terminal_arguments);
-	
+	hibernate_process(0);
 	// write(1, "HOLA", 4);
 	// char hola[1];
 	// int ret = 0;
