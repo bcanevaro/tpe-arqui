@@ -72,23 +72,14 @@ void keyboard_handler() {
         if (!get_in_split_screen() && get_in_unique_screen()) {
             suspend_unique_process();
         }
-    } else if (scancode == 61) { //F3 -> termino proceso pantalla izquierda
-        if (!get_in_unique_screen() && get_in_split_screen()) {
-            kill_left_split_screen();
-        }
-    } else if (scancode == 62) { //F4 -> suspendo/reanudo proceso pantalla izquierda
+    } else if (scancode == 61) { //F3 -> suspendo/reanudo proceso pantalla izquierda
         if (!get_in_unique_screen() && get_in_split_screen()) {
             suspend_left_split_screen();
         }
-    } else if (scancode == 63) { //F5 -> termino proceso pantalla derecha
-        if (get_in_split_screen()) {
+    } else if (scancode == 62) { //F4 -> suspendo/reanudo proceso pantalla derecha
+        if (!get_in_unique_screen() && get_in_split_screen()) {
             suspend_right_split_screen();
         }
-    } else if (scancode == 64) { //F6 -> suspendo/reanudo proceso pantalla derecha
-        // if (get_in_split_screen()) {
-        //     ncStopSplitScreen();
-        //     stop_right_split_screen();
-        // }
     } else {
         if (lower_array[scancode] != 0) {
             char letter;
