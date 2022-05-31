@@ -64,7 +64,7 @@ SECTION .text
 	pop r15
 %endmacro
 
-%macro irqHandlerMaster 1
+%macro saveContext 0 
 	push rax ;voy a usar RAX para pasar los punteros
 	mov rax, [rsp+8]
 	mov [current_rip],rax
@@ -88,6 +88,10 @@ SECTION .text
 	mov [current_gp_registers+96], r13
 	mov [current_gp_registers+104], r14
 	mov [current_gp_registers+112], r15
+%endmacro
+
+%macro irqHandlerMaster 1
+	saveContext
 	pushState
 
 	mov rdi, %1 ; pasaje de parametro
@@ -102,29 +106,7 @@ SECTION .text
 %endmacro
 
 %macro exceptionHandler 1
-	push rax ;voy a usar RAX para pasar los punteros
-	mov rax, [rsp+8]
-	mov [current_rip],rax
-	add rsp,24
-	mov rax, [rsp+8]
-	mov [current_rsp],rax
-	sub rsp,24
-	pop rax
-	mov [current_gp_registers], rax
-	mov [current_gp_registers+8], rbx
-	mov [current_gp_registers+16], rcx
-	mov [current_gp_registers+24], rdx
-	mov [current_gp_registers+32], rbp
-	mov [current_gp_registers+40], rdi
-	mov [current_gp_registers+48], rsi
-	mov [current_gp_registers+56], r8
-	mov [current_gp_registers+64], r9
-	mov [current_gp_registers+72], r10
-	mov [current_gp_registers+80], r11
-	mov [current_gp_registers+88], r12
-	mov [current_gp_registers+96], r13
-	mov [current_gp_registers+104], r14
-	mov [current_gp_registers+112], r15
+	saveContext
 	pushState
 
 	call load_registers
@@ -137,7 +119,6 @@ SECTION .text
 	iretq
 %endmacro
 
-
 _hlt:
 	sti
 	hlt
@@ -146,7 +127,6 @@ _hlt:
 _cli:
 	cli
 	ret
-
 
 _sti:
 	sti
@@ -170,30 +150,9 @@ picSlaveMask:
 
 ;8254 Timer (Timer Tick)
 _irq00Handler:
-	push rax ;voy a usar RAX para pasar los punteros
-	mov rax, [rsp+8]
-	mov [current_rip],rax
-	add rsp,24
-	mov rax, [rsp+8]
-	mov [current_rsp],rax
-	sub rsp,24
-	pop rax
-	mov [current_gp_registers], rax
-	mov [current_gp_registers+8], rbx
-	mov [current_gp_registers+16], rcx
-	mov [current_gp_registers+24], rdx
-	mov [current_gp_registers+32], rbp
-	mov [current_gp_registers+40], rdi
-	mov [current_gp_registers+48], rsi
-	mov [current_gp_registers+56], r8
-	mov [current_gp_registers+64], r9
-	mov [current_gp_registers+72], r10
-	mov [current_gp_registers+80], r11
-	mov [current_gp_registers+88], r12
-	mov [current_gp_registers+96], r13
-	mov [current_gp_registers+104], r14
-	mov [current_gp_registers+112], r15
-	pushState	
+	saveContext
+	pushState
+
 	mov rdi, 0x00 ; pasaje de parametro
 	call irqDispatcher
 
@@ -224,37 +183,15 @@ _irq04Handler:
 _irq05Handler:
 	irqHandlerMaster 5
 
-; Se usa la convención de Linux -> vease https://alejofl.github.io/syscalls/x86_64/
 _irq80Handler:
-	push rax ;voy a usar RAX para pasar los punteros
-	mov rax, [rsp+8]
-	mov [current_rip],rax
-	add rsp,24
-	mov rax, [rsp+8]
-	mov [current_rsp],rax
-	sub rsp,24
-	pop rax
-	mov [current_gp_registers], rax
-	mov [current_gp_registers+8], rbx
-	mov [current_gp_registers+16], rcx
-	mov [current_gp_registers+24], rdx
-	mov [current_gp_registers+32], rbp
-	mov [current_gp_registers+40], rdi
-	mov [current_gp_registers+48], rsi
-	mov [current_gp_registers+56], r8
-	mov [current_gp_registers+64], r9
-	mov [current_gp_registers+72], r10
-	mov [current_gp_registers+80], r11
-	mov [current_gp_registers+88], r12
-	mov [current_gp_registers+96], r13
-	mov [current_gp_registers+104], r14
-	mov [current_gp_registers+112], r15
+	saveContext
+
 	push rbp
-	push    rsp
-	push    rbx
-	push    r12
-	push    r13
-	push    r15
+	push rsp
+	push rbx
+	push r12
+	push r13
+	push r15
 
 	mov rcx, rax ; pasaje de numero de syscall
 	call syscallDispatcher
@@ -274,7 +211,6 @@ _irq80Handler:
 	pop rsp
 	pop rbp
 	iretq
-
 
 ;Zero Division Exception
 _exception0Handler:
@@ -306,7 +242,6 @@ get_current_gp_registers:
 	mov rax,current_gp_registers
 	leave
 	ret
-
 
 section .bss
 	current_rip resq 1

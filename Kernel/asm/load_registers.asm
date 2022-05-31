@@ -1,34 +1,25 @@
 GLOBAL load_registers
-GLOBAL continue_execution
-EXTERN main
-EXTERN getStackBase
 section .text
-
-continue_execution:
-    call getStackBase	        ; Get thet stack address
-	mov rsp, rax			; Set up the stack with the returned address
-	call main
- 
  
     ; https://os.phil-opp.com/handling-exceptions/ 
     ; STACK
     ;	RBP     -> stack frame
     ;   RIP     -> dirección de retorno
-    ;   r15
-	;   r14
-	;   r13
-	;   r12
-	;   r11
-	;   r10
-	;   r9
-	;   r8
-	;   rsi
-	;   rdi
-	;   rbp
-	;   rdx
-	;   rcx
+    ;   rax
 	;   rbx
-	;   rax
+	;   rcx
+	;   rdx
+	;   rbp
+	;   rdi
+	;   rsi
+	;   r8
+	;   r9
+	;   r10
+	;   r11
+	;   r12
+	;   r13
+	;   r14
+	;   r15
     ;   RIP     -> instruction that caused the exception -> this is pushed by the microproccesor
     ;   CS
     ;   RFLAGS
@@ -40,12 +31,13 @@ load_registers:
     mov rbx, 0
 
 .loop:
-    mov rax, [rbp+rbx+8]
+    mov rax, [rbp+rbx+16]
     mov [registers+rbx], rax
     add rbx, 8
     cmp rbx, length
     jne .loop
     
+    mov rax, registers
     leave
     ret
 
