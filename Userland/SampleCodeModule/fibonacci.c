@@ -1,12 +1,7 @@
 #include <syscalls.h>
 #include <libc.h>
 
-int stop_fibo = 0;
-unsigned long long ans_ans = 0;
-unsigned long long ans = 1;
-unsigned long long counter = 1;
-
-unsigned long long get_next_fibo();
+unsigned long long get_next_fibo(unsigned long long * ans, unsigned long long * ans_ans, unsigned long long * counter);
 
 static char str1[] = "Fibonacci(";
 static int str1_length = 10;
@@ -16,16 +11,18 @@ static char str3[] = "\n";
 static int str3_length = 1;
 
 void fibonacci(unsigned int fd) {
-    if (!stop_fibo) {
-        char fibo0[] = "Fibonacci(0) = 0\n";
-        char fibo1[] = "Fibonacci(1) = 1\n";
-        write(fd, fibo0, strlen(fibo0));
-        // sleep(1);
-        write(fd, fibo1, strlen(fibo1));
-        // sleep(1);
-    }
-    while (!stop_fibo) {
-        unsigned long long f = get_next_fibo();
+    unsigned long long ans_ans = 0;
+    unsigned long long ans = 1;
+    unsigned long long counter = 1;
+
+    char fibo0[] = "Fibonacci(0) = 0\n";
+    char fibo1[] = "Fibonacci(1) = 1\n";
+    write(fd, fibo0, strlen(fibo0));
+    // sleep(1);
+    write(fd, fibo1, strlen(fibo1));
+    // sleep(1);
+    while (1) {
+        unsigned long long f = get_next_fibo(&ans, &ans_ans, &counter);
         int length = num_length(f);
         char str[length + 1];
         num_to_str(f, str, length);
@@ -43,10 +40,10 @@ void fibonacci(unsigned int fd) {
     }
 }
 
-unsigned long long get_next_fibo() {
-    unsigned long long to_return = ans_ans + ans;
-    ans_ans = ans;
-    ans = to_return;
-    counter++;
+unsigned long long get_next_fibo(unsigned long long * ans, unsigned long long * ans_ans, unsigned long long * counter) {
+    unsigned long long to_return = *ans_ans + *ans;
+    *ans_ans = *ans;
+    *ans = to_return;
+    *counter += 1;
     return to_return;
 }

@@ -15,6 +15,7 @@ int is_valid_hex(char * str);
 int num_to_str(unsigned long long num, char * buffer, int bufferSize);
 int num_length(unsigned long long num);
 void sleep(int seconds);
+void flush_buffer();
 uint32_t uint_to_base(uint64_t value, char * buffer, uint32_t base);
 
 #endif

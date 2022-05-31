@@ -129,6 +129,11 @@ void sleep(int seconds) {
     for (int i = seconds_elapsed(); i < seconds_e + seconds; i = seconds_elapsed());
 }
 
+void flush_buffer() {
+    char dummy[1];
+    while (read(1, dummy, 1));
+}
+
 // Retrieved from naiveConsole.c
 uint32_t uint_to_base(uint64_t value, char * buffer, uint32_t base)
 {

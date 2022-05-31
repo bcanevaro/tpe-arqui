@@ -53,6 +53,7 @@ static void excepHandler(int message_index, uint64_t * registers) {
 		}
     }
 	ncNewline(fd);
+	ncNewline(fd);
 	ncPrint(fd, separator[in_split_screen]);
 	if (in_split_screen) {
 		kill_split_process(pid);

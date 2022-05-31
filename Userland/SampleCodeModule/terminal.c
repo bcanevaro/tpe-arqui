@@ -46,6 +46,7 @@ void terminal(){
             * | *
         2.2 Con el enter 
     */
+    flush_buffer();
     int pipe = 0;
     write(1, "$> ", 3);
     char letter[1] = {0};
