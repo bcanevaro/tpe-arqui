@@ -10,8 +10,10 @@
 #include <clear.h>
 #include <print_mem.h>
 
+#define PRINT_MEM_POS 8
 #define COMMS_LEN 9
 #define MAX_ADDRESS_LEN 18
+#define BUFFER_LEN 256
 static char print_memory[] = "printmem ";
 static char * commands[]={"help", "divide_by_zero", "invalid_opcode", "inforeg",  
                             "fibonacci", "primes", "datetime", "clear"};
@@ -22,7 +24,12 @@ static Command commands_functions[] = {&help, &divide_by_zero, &invalid_opcode, 
 
 void terminal();
 void error();
+int print_mem_validation(char * buffer);
+int pipe_validation(char * buffer, int * func1, int * func2, char * address_1, char * address_2);
+int command_validation(char * command, char * address);
+void prueba(){
 
+}
 // Falta el ctrl + c
 void terminal(){
     /*
@@ -42,7 +49,7 @@ void terminal(){
     int pipe = 0;
     write(1, "$> ", 3);
     char letter[1] = {0};
-    char buffer[256];
+    char buffer[BUFFER_LEN];
     int ret = 0;
     int i = 0;
     while(letter[0] != '\n'){
@@ -69,18 +76,51 @@ void terminal(){
         return; 
     }
     if(pipe == 1){
-        arguments arguments_left = {
-            .integer = 3,
-            .string = -1
-        };
-        arguments arguments_right = {
-            .integer = 5,
-            .string = -1
-        };
-        start_split_screen();
-        load_process(&fibonacci, &arguments_left);
-        load_process(&fibonacci, &arguments_right);
-        hibernate_process(1);
+        int func1, func2;
+        char address_1[19];
+        char address_2[19];
+        if(pipe_validation(buffer, &func1, &func2, address_1, address_2)){
+            start_split_screen();
+            if(func1 != PRINT_MEM_POS && func2 != PRINT_MEM_POS){
+                arguments arguments_left = {
+                .integer = 3,
+                .string = -1
+                };
+                arguments arguments_right = {
+                    .integer = 5,
+                    .string = -1
+                };
+                load_process(commands_functions[func1], &arguments_left);
+                load_process(commands_functions[func2], &arguments_right);
+                hibernate_process(1);
+            }else if(func1 == PRINT_MEM_POS && func2 != PRINT_MEM_POS){
+                arguments arguments_left = {3, address_1};
+                arguments arguments_right = {
+                    .integer = 5,
+                    .string = -1
+                };
+                load_process(&print_mem, &arguments_left);
+                load_process(commands_functions[func2], &arguments_right);
+                hibernate_process(1);
+            }else if(func1 != PRINT_MEM_POS && func2 == PRINT_MEM_POS){
+                arguments arguments_left = {
+                .integer = 3,
+                .string = -1
+                };
+                arguments arguments_right = {5, address_2};
+                load_process(commands_functions[func1], &arguments_left);
+                load_process(&print_mem, &arguments_right);
+                hibernate_process(1);
+            }else{
+                arguments arguments_left = {3, address_1};
+                arguments arguments_right = {5, address_2};
+                load_process(&print_mem, &arguments_left);
+                load_process(&print_mem, &arguments_right);
+                hibernate_process(1);
+            }
+        }else{
+            error();
+        }
     }else if(pipe == 0){
         int found = 0;
         for(int i = 0; !found && i < COMMS_LEN - 1; i++){
@@ -91,20 +131,13 @@ void terminal(){
                 found = 1;
             }
         }
-        // Esto es para print_mem.
-        if(!found){ // Si no es ninguno de los comandos guardados en el vector command_functions
-            int is_print_mem = 1;
-            int i;
-            char mem_address[19];
-            int print_mem_len = strlen(print_memory);
-            for(i = 0; buffer[i] !=0 && is_print_mem && i < print_mem_len; i++){
-                if(buffer[i] != print_memory[i]){
-                    is_print_mem = 0;
-                }
-            }
-            if(is_print_mem){
+        if(!found){
+            if(print_mem_validation(buffer)){
+                char mem_address[19];
+                int print_mem_len = strlen(print_memory);
+                int i = COMMS_LEN;
                 int j;
-                for(j = 0; buffer[i] != 0 && i < MAX_ADDRESS_LEN + print_mem_len; i++, j++){
+                for(j = 0; buffer[i] != 0; i++, j++){
                     mem_address[j] = buffer[i];
                 }
                 mem_address[j] = 0;
@@ -123,4 +156,83 @@ void terminal(){
 void error(){
     char error_message[] = "Invalid command. Type \"help\" for the command list.\n";
     write(2, error_message, strlen(error_message));
+}
+
+int pipe_validation(char * buffer, int * func1, int * func2, char * address_1, char * address_2){
+    char str1[BUFFER_LEN];
+    char str2[BUFFER_LEN];
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    while(buffer[i] != '|'){
+        str1[j++] = buffer[i++];
+    }
+    i++;
+    while(buffer[i]){
+        str2[k++] = buffer[i++];
+    }
+    str1[j] = 0;
+    str2[k] = 0;
+    *func1 = command_validation(str1, address_1);
+    *func2 = command_validation(str2, address_2);
+    // Si alguno de los dos no es un comando valido entonces debo retornar cero.
+    if(*func1 == -1 || *func2 == -1){
+        return 0;
+    }
+    return 1;
+}
+// Me devuelve la posicion del vector de punteros a funcion del 0 al 7
+// si me devuelve 8 entonces es print_mem. Sino devuelve el -1;
+int command_validation(char * command, char * address) {
+    int found = -1;
+    int i;
+    for(i = 0; found == -1 && i < COMMS_LEN - 1; i++){
+        if(strcmp(command, commands[i]) == 0){
+            arguments function_arguments = {1, -1};
+            load_process(commands_functions[i], &function_arguments);
+            hibernate_process(1);
+            found = i;
+        }
+    }
+    if(print_mem_validation(command)){
+        found = PRINT_MEM_POS;
+        int print_mem_len = strlen(print_memory);
+        int i = COMMS_LEN;
+        int j;
+        for(j = 0; command[i] != 0; i++, j++){
+            address[j] = command[i];
+        }
+        address[j] = 0;
+    }
+    return found;
+}
+// Printmem command verification
+int print_mem_validation(char * buffer){
+    int is_print_mem = 1;
+    int i;
+    int print_mem_len = strlen(print_memory);
+    for(i = 0; buffer[i] != 0 && is_print_mem && i < print_mem_len; i++){
+        if(buffer[i] != print_memory[i]){
+            is_print_mem = 0;
+        }
+    }
+    if(i < COMMS_LEN || buffer[i] != '0' || buffer[i+1] != 'x'){
+        is_print_mem = 0;
+    }
+    if(!is_print_mem){
+        return is_print_mem;
+    }
+    i += 2;
+    int address_digits = 0;
+    while(buffer[i]){
+        if(buffer[i] < '0' || buffer[i] > '9'){
+            is_print_mem = 0;
+        }
+        address_digits++;
+        i++;
+    }
+    if(address_digits == 0 || address_digits > MAX_ADDRESS_LEN){
+        is_print_mem = 0;
+    }
+    return is_print_mem;
 }
