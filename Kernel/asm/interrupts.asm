@@ -134,7 +134,6 @@ SECTION .text
 	call exceptionDispatcher
 
 	popState
-	add qword [rsp], 2 ;aumento 1 al RIP que esta guardado 
 	iretq
 %endmacro
 

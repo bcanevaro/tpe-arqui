@@ -38,4 +38,7 @@ void stop_split_screen();
 
 void update_status(int pid, int status);
 
+int get_current_pid();
+void kill_split_process(int pid);
+
 #endif

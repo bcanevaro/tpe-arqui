@@ -1,7 +1,6 @@
 #include <naiveConsole.h>
 #include <syscallDispatcher.h>
-#define ZERO_EXCEPTION_ID 0
-#define INVALID_OPCODE_EXCEPTION_ID 6
+#include <scheduler.h>
 
 #define ALL_REGISTER_COUNT 20
 static char * register_names[] = {"   RAX=", "   RBX=", "   RCX=", "   RDX=", "   RBP=", "   RDI=", "   RSI=", "    R8=",
@@ -12,45 +11,60 @@ static char * register_names[] = {"   RAX=", "   RBX=", "   RCX=", "   RDX=", " 
 static void zero_division(uint64_t * registers);
 static void invalid_opcode(uint64_t * registers);
 typedef void (*Exception)(uint64_t *);
-static void excepHandler(char * msg, uint64_t * registers);
-extern void continue_execution();
-extern void _hlt();
+static void excepHandler(int message_index, uint64_t * registers);
 
 
 static Exception exceptions[]={&zero_division, 0, 0, 0, 0, 0, &invalid_opcode};
-static char * message[] = {"----- Zero Division Exception --------------------------------------------------", "----- Invalid Opcode Exception -------------------------------------------------"};
-static char * separator = "--------------------------------------------------------------------------------";
+static char * message[][2] = {{"----- Zero Division Exception --------------------------------------------------", "----- Invalid Opcode Exception -------------------------------------------------"},
+							  {"----- Zero Division Exception ---------", "----- Invalid Opcode Exception --------"}};
+static char * separator[2] = {"--------------------------------------------------------------------------------",
+							  "---------------------------------------"};
 
 void exceptionDispatcher(int exception, uint64_t * registers) {
-  Exception ex = exceptions[exception];
+	Exception ex = exceptions[exception];
 	if(ex != 0){
 		ex(registers);
 	}
 }
 
-// FALTA QUE IMPRIMA LA EXCEPCION DE CADA LADO
-static void excepHandler(char * msg, uint64_t * registers){
-	ncPrint(2, msg);
-	ncNewline(2);
+/*
+						PID		FD
+Pantalla Central		3		2
+Pantalla Izquierda		3		4
+Pantalla Derecha		4		6
+*/
+static void excepHandler(int message_index, uint64_t * registers) {
+	int pid = get_current_pid();
+	int fd = pid - 1;
+	char in_split_screen = get_in_split_screen();
+	if (in_split_screen) {
+		fd *= 2;
+	}
+	ncNewline(fd);
+	ncPrint(fd, message[in_split_screen][message_index]);
+	ncNewline(fd);
 	char buffer[17];
     for (int i = 0; i < ALL_REGISTER_COUNT; i++) {
-        ncPrint(2, register_names[i]);
-		printRegisterFormat(2, registers[i]);
-		ncPrint(2, " ");
+        ncPrint(fd, register_names[i]);
+		printRegisterFormat(fd, registers[i]);
+		ncPrint(fd, " ");
 		if ((i+1) % 3 == 0) {
-			ncNewline(2);
+			ncNewline(fd);
 		}
     }
-	ncNewline(2);
-	ncPrint(2, separator);
-	// ncClear();
-	// continue_execution();
+	ncNewline(fd);
+	ncPrint(fd, separator[in_split_screen]);
+	if (in_split_screen) {
+		kill_split_process(pid);
+	} else {
+		kill_unique_process();
+	}
 }
 
 static void zero_division(uint64_t * registers) {
-	excepHandler(message[0], registers);
+	excepHandler(0, registers);
 }
 
 static void invalid_opcode(uint64_t * registers){
-	excepHandler(message[1], registers);
+	excepHandler(1, registers);
 }

@@ -146,6 +146,10 @@ char get_in_unique_screen() {
     return in_unique_screen;
 }
 
+int get_current_pid() {
+    return current_pid;
+}
+
 void stop_split_screen() {
     set_in_split_screen(0);
 
@@ -163,11 +167,11 @@ void stop_split_screen() {
     scheduler();
 }
 
-void kill_unique_process(){
+void kill_unique_process() {
     if(processes[3].status == FINISHED) {
         return;
     }
-    ncClear();
+    ncNewline(2);
     set_in_unique_screen(0);
     update_status(3, FINISHED);
 
@@ -237,4 +241,10 @@ void update_status(int pid, int status) {
     task the_task = processes[pid];
     the_task.status = status;
     processes[pid] = the_task;
+}
+
+void kill_split_process(int pid) {
+    update_status(pid, FINISHED);
+    running_processes--;
+    scheduler();
 }
