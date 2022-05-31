@@ -1,4 +1,5 @@
 #include <keyboard.h>
+#include <scheduler.h>
 #include <naiveConsole.h>
 #include <signal.h>
 
@@ -47,29 +48,49 @@ void update_dim(int dim){
     actualDim = dim;
 }
 
+void pruena() {}
+
 void keyboard_handler() {
 	uint8_t scancode = read_port(0x60);
-    if(scancode >= 128){
-        if(scancode == 170 || scancode == 182){
+    if (scancode >= 128) {
+        if (scancode == 170 || scancode == 182) {
             shift = 0;
         }
         return;
-    }else if(scancode == 42 || scancode == 54){
+    } else if (scancode == 42 || scancode == 54) {
         shift = 1;
-    }else if(scancode == 58){
+    } else if (scancode == 58) {
         caps_lock = !caps_lock;
-    } 
-    else{
+    } else if (scancode == 11) { //ESC -> salir de pantalla dividida
+        ncPrint(1, "HOLAAA");
+        pruena();
+        if (get_in_split_screen()) {
+            ncStopSplitScreen();
+            stop_split_screen();
+        }
+    } else if (scancode == 59) { //F1 -> termino proceso pantalla entera
+
+    } else if (scancode == 60) { //F2 -> suspendo/reanudo proceso pantalla entera
+
+    } else if (scancode == 61) { //F3 -> termino proceso pantalla izquierda
+
+    } else if (scancode == 62) { //F4 -> suspendo/reanudo proceso pantalla izquierda
+
+    } else if (scancode == 63) { //F5 -> termino proceso pantalla derecha
+
+    } else if (scancode == 64) { //F6 -> suspendo/reanudo proceso pantalla derecha
+
+    } else {
         if (lower_array[scancode] != 0) {
             char letter;
-            if(shift){
+            if (shift) {
                 letter = upper_array[scancode];
-            }else if(caps_lock){
+            } else if(caps_lock) {
                 letter = caps_lock_array[scancode];
-            }else{
+            } else {
                 letter = lower_array[scancode];
             }
-            if( actualDim < 256){
+            if (actualDim < 256) {
                 buffer[actualDim++] = letter;
             }
         }

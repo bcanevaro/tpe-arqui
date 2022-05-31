@@ -96,6 +96,7 @@ int sys_print_byte_from_mem(unsigned int fd, uint8_t * address, uint64_t rdx) {
 int sys_start_split_screen(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
     // if(functions != 0 && functions[0] != 0 && functions[1] != 0) {
     ncStartSplitScreen();
+    set_in_split_screen(1);
     //     int pid_left = es(functions[0],args_f1->integer,args_f1->string);
     //     int pid_right = load_processes(functions[1],args_f2->integer,args_f2->string);
     //     activate_scheduler();

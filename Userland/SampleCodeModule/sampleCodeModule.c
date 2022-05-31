@@ -18,7 +18,7 @@ int main() {
 	clear_screen();
 	arguments terminal_arguments = {-1,-1};
 	load_process(&infinite_terminal, &terminal_arguments);
-	hibernate_process(0);
+	hibernate_process(1);
 	// write(1, "HOLA", 4);
 	// char hola[1];
 	// int ret = 0;

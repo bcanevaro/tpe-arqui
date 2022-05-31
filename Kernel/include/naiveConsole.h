@@ -42,5 +42,6 @@ void ncClear();
 void ncBackspace();
 
 void ncStartSplitScreen();
+void ncStopSplitScreen();
 
 #endif

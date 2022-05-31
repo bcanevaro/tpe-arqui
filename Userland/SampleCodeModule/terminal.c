@@ -12,7 +12,7 @@
 
 #define PRINT_MEM_POS 8
 #define COMMS_LEN 9
-#define MAX_ADDRESS_LEN 18
+#define MAX_ADDRESS_LEN 16
 #define BUFFER_LEN 256
 static char print_memory[] = "printmem ";
 static char * commands[]={"help", "divide_by_zero", "invalid_opcode", "inforeg",  
@@ -77,8 +77,8 @@ void terminal(){
     }
     if(pipe == 1){
         int func1, func2;
-        char address_1[19];
-        char address_2[19];
+        char address_1[MAX_ADDRESS_LEN+1];
+        char address_2[MAX_ADDRESS_LEN+1];
         if(pipe_validation(buffer, &func1, &func2, address_1, address_2)){
             start_split_screen();
             if(func1 != PRINT_MEM_POS && func2 != PRINT_MEM_POS){
@@ -92,7 +92,7 @@ void terminal(){
                 };
                 load_process(commands_functions[func1], &arguments_left);
                 load_process(commands_functions[func2], &arguments_right);
-                hibernate_process(1);
+                hibernate_process(2);
             }else if(func1 == PRINT_MEM_POS && func2 != PRINT_MEM_POS){
                 arguments arguments_left = {3, address_1};
                 arguments arguments_right = {
@@ -101,7 +101,7 @@ void terminal(){
                 };
                 load_process(&print_mem, &arguments_left);
                 load_process(commands_functions[func2], &arguments_right);
-                hibernate_process(1);
+                hibernate_process(2);
             }else if(func1 != PRINT_MEM_POS && func2 == PRINT_MEM_POS){
                 arguments arguments_left = {
                 .integer = 3,
@@ -110,13 +110,13 @@ void terminal(){
                 arguments arguments_right = {5, address_2};
                 load_process(commands_functions[func1], &arguments_left);
                 load_process(&print_mem, &arguments_right);
-                hibernate_process(1);
+                hibernate_process(2);
             }else{
                 arguments arguments_left = {3, address_1};
                 arguments arguments_right = {5, address_2};
                 load_process(&print_mem, &arguments_left);
                 load_process(&print_mem, &arguments_right);
-                hibernate_process(1);
+                hibernate_process(2);
             }
         }else{
             error();
@@ -127,7 +127,7 @@ void terminal(){
             if(strcmp(buffer, commands[i]) == 0){
                 arguments function_arguments = {1, -1};
                 load_process(commands_functions[i], &function_arguments);
-                hibernate_process(1);
+                hibernate_process(2);
                 found = 1;
             }
         }
@@ -143,7 +143,7 @@ void terminal(){
                 mem_address[j] = 0;
                 arguments function_arguments = {1, mem_address};
                 load_process(&print_mem, &function_arguments);
-                hibernate_process(1);
+                hibernate_process(2);
             }else{
                 error();
             }
@@ -188,16 +188,13 @@ int command_validation(char * command, char * address) {
     int i;
     for(i = 0; found == -1 && i < COMMS_LEN - 1; i++){
         if(strcmp(command, commands[i]) == 0){
-            arguments function_arguments = {1, -1};
-            load_process(commands_functions[i], &function_arguments);
-            hibernate_process(1);
             found = i;
         }
     }
-    if(print_mem_validation(command)){
+    if(found == -1 && print_mem_validation(command)){
         found = PRINT_MEM_POS;
         int print_mem_len = strlen(print_memory);
-        int i = COMMS_LEN;
+        int i = print_mem_len;
         int j;
         for(j = 0; command[i] != 0; i++, j++){
             address[j] = command[i];
@@ -216,7 +213,7 @@ int print_mem_validation(char * buffer){
             is_print_mem = 0;
         }
     }
-    if(i < COMMS_LEN || buffer[i] != '0' || buffer[i+1] != 'x'){
+    if(i < print_mem_len || buffer[i] != '0' || buffer[i+1] != 'x'){
         is_print_mem = 0;
     }
     if(!is_print_mem){
@@ -225,9 +222,6 @@ int print_mem_validation(char * buffer){
     i += 2;
     int address_digits = 0;
     while(buffer[i]){
-        if(buffer[i] < '0' || buffer[i] > '9'){
-            is_print_mem = 0;
-        }
         address_digits++;
         i++;
     }

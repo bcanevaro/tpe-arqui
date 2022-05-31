@@ -2,7 +2,7 @@
 #define _SCHEDULER_H_
 #include <stdint.h>
 #include <schedulerfunctions.h>
-#define NUM_PROCESSES 4
+#define NUM_PROCESSES 5
 #define STACK_BASE 0x450000
 #define PROCESS_SIZE ( 8 * 1024 )
 // Puntero a funcion
@@ -20,8 +20,9 @@ typedef struct {
 int load_processes(uint64_t rip, int fd, char * string);
 void exec_process(int pid);
 void scheduler(void);
-void activate_scheduler(void);
-char is_scheduler_active(void);
 int hibernate_process(int pid);
+void set_in_split_screen(char value);
+char get_in_split_screen();
+void stop_split_screen();
 
 #endif

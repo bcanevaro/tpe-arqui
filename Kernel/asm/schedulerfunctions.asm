@@ -90,7 +90,13 @@ run_process:
 	pop rdx
 	pop rcx
 	pop rbx
-	pop rax
     ; Desarma el stack de excepciones
     ; https://os.phil-opp.com/returning-from-exceptions/exception-stack-frame.svg
+
+	; signal pic EOI (End of Interrupt)
+	; ESTO ES MUY NECESARIO PORQUE SINO NO VUELVE A ESCUCHAR A EL TECLADO
+	mov al, 20h
+	out 20h, al
+
+	pop rax
     iretq

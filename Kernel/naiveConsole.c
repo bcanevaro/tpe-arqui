@@ -19,11 +19,11 @@ static const uint32_t semi_width = 39;
 static uint8_t * const left = (uint8_t*)0xB8000;
 static uint8_t * const right = (uint8_t*)0xB8052;
 static uint8_t * currentLeft = (uint8_t*)0xB8000;
+static uint8_t * currentRight = (uint8_t*)0xB8052;
 static int leftIndex = 0;
 static int leftVerticalIndex = 0;
 static int rightVerticalIndex = 0;
 static int rightIndex = 0;
-static uint8_t * currentRight = (uint8_t*)0xB8052;
 
 static uint8_t * ncGetPosition(int x, int y) {
 	return video + width * 2 * x + y * 2;
@@ -40,6 +40,16 @@ void ncStartSplitScreen() {
 		*(ad+1) = ( 0x00 | BLACK ) << 4 | YELLOW;
 	}
 	currentVideo = video;
+}
+
+void ncStopSplitScreen() {
+	ncClear();
+	currentLeft = left;
+	currentRight = right;
+	leftIndex = 0;
+	leftVerticalIndex = 0;
+	rightVerticalIndex = 0;
+	rightIndex = 0;
 }
 
 void ncPrint(int fd, const char * string)
