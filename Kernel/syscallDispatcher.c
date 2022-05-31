@@ -8,7 +8,7 @@
 #include <scheduler.h>
 
 typedef int (*sys_call)(unsigned int, char *, unsigned int);
-static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime, &sys_print_byte_from_mem, &sys_start_split_screen, &sys_load_process, &sys_hibernate_process};
+static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime, &sys_print_byte_from_mem, &sys_start_split_screen, &sys_load_process, &sys_hibernate_process, &sys_start_unique_screen};
 
 typedef uint8_t (*rtc_argument)(void);
 static rtc_argument realtime[] = {&rtc_seconds, &rtc_minutes, &rtc_hours, &rtc_day, &rtc_month, &rtc_year};
@@ -119,3 +119,7 @@ int sys_hibernate_process(int pid, uint64_t rsi, uint64_t rdx) {
     return hibernate_process(pid);
 }
 
+int sys_start_unique_screen(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
+    set_in_unique_screen(1);
+    return 1;
+}

@@ -12,6 +12,11 @@ static char scheduler_active = 0;
 static int running_processes = 0;
 
 static char in_split_screen = 0;
+static char in_unique_screen = 0;
+
+static char left_screen_suspended = 0;
+static char right_screen_suspended = 0;
+static char unique_screen_suspended = 0;
 
 #define ACTIVE 2
 #define IDLE 1
@@ -157,6 +162,15 @@ char get_in_split_screen() {
     return in_split_screen;
 }
 
+void set_in_unique_screen(char value) {
+    in_unique_screen = value;
+}
+
+char get_in_unique_screen() {
+    return in_unique_screen;
+}
+
+
 void stop_split_screen() {
     set_in_split_screen(0);
 
@@ -175,4 +189,102 @@ void stop_split_screen() {
     running_processes = 1;
     current_pid = -1;
     scheduler();
+}
+
+// Unique Screen Management Functions
+void kill_unique_process(){
+    task current_task_1 = processes[3];
+    task current_task_2 = processes[4];
+    if(current_task_1.active == FINISHED && current_task_1.active == FINISHED) {
+        return;
+    }
+    ncClear();
+    set_in_unique_screen(0);
+    current_task_1.active = FINISHED;
+    current_task_2.active = FINISHED;
+
+    // Esto lo hago por si quiero killear el programa cuando se encontraba
+    // en pausa.
+    if(running_processes){
+        running_processes--;
+    }
+    processes[3] = current_task_1;
+    processes[4] = current_task_2;
+    process_qty--;
+
+    task terminal_task = processes[2];
+    terminal_task.active = IDLE;
+    processes[2] = terminal_task;
+    running_processes++;
+    current_pid = -1;
+    unique_screen_suspended = 0;
+    scheduler();
+}
+
+void suspend_unique_process(){
+    if(processes[3].active < IDLE && processes[4].active < IDLE) {
+        return;
+    }
+    if(!unique_screen_suspended){
+        unique_screen_suspended = 1;
+        pause_process(3);
+        pause_process(4);
+        task current_task = processes[3];
+        current_task.active = PAUSED;
+        task current_task_2 = processes[4];
+        current_task_2.active = PAUSED;
+        running_processes--;
+        processes[3] = current_task;
+        processes[4] = current_task_2;
+        scheduler();
+    }else{
+        unique_screen_suspended = 0;
+        task current_task = processes[3];
+        current_task.active = IDLE;
+        task current_task_2 = processes[4];
+        current_task_2.active = IDLE;
+        running_processes++;
+        scheduler();
+    }
+}
+
+
+// Para cada pantalla puedo tener lo siguiente:
+//  * -1 si la killee
+//  * 0 si esta funcionando, es decir, imprimiendo.
+//  * 1 si esta pausada/suspendida.
+// Algo importante que no me fije es que si el programa ya finalizo no deberia
+// poder hacer nada con todas las F1, F2, ..., F6. Para Unique Screen esta realizado.
+// MALISIMA
+void kill_left_split_screen() {
+    task current_task = processes[3];
+    current_task.rip = get_current_rip();
+    current_task.rsp = stop_process(get_current_rsp(), current_task.rip, get_current_gp_registers());
+    current_task.active = PAUSED;
+    processes[3] = current_task;
+    running_processes--;
+    scheduler();
+}
+// MAL
+void suspend_left_split_screen() {
+    if(left_screen_suspended == 0){
+        left_screen_suspended = 1;
+        task current_task = processes[3];
+        current_task.rip = get_current_rip();
+        current_task.rsp = stop_process(get_current_rsp(), current_task.rip, get_current_gp_registers());
+        current_task.active = PAUSED;
+        processes[3] = current_task;
+        running_processes--;
+        scheduler();
+    }else{
+        left_screen_suspended = 0;
+        task task_left = processes[3];
+        task_left.active = IDLE;
+        processes[3] = task_left;      
+        running_processes++;
+        scheduler();
+    }
+}
+
+void suspend_right_split_screen() {
 }

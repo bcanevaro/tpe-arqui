@@ -7,6 +7,8 @@ GLOBAL print_byte_from_mem
 GLOBAL start_split_screen
 GLOBAL load_process
 GLOBAL hibernate_process
+GLOBAL start_unique_screen
+
 
 section .text
 
@@ -88,6 +90,15 @@ hibernate_process:
     enter 0, 0
 
     mov rax, 0x08
+    int 80h
+
+    leave
+    ret
+
+start_unique_screen:
+    enter 0, 0
+
+    mov rax, 0x09
     int 80h
 
     leave

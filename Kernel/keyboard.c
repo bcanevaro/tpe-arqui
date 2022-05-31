@@ -60,24 +60,35 @@ void keyboard_handler() {
     } else if (scancode == 58) {
         caps_lock = !caps_lock;
     } else if (scancode == 1) { //ESC -> salir de pantalla dividida
-        if (get_in_split_screen()) {
+        if (!get_in_unique_screen() && get_in_split_screen()) {
             ncStopSplitScreen();
             stop_split_screen();
         }
     } else if (scancode == 59) { //F1 -> termino proceso pantalla entera
-        // if (!get_in_split_screen()) {
-        //     kill_process(3);
-        // }
+        if (!get_in_split_screen() && get_in_unique_screen()) {
+            kill_unique_process();
+        }
     } else if (scancode == 60) { //F2 -> suspendo/reanudo proceso pantalla entera
-
+        if (!get_in_split_screen() && get_in_unique_screen()) {
+            suspend_unique_process();
+        }
     } else if (scancode == 61) { //F3 -> termino proceso pantalla izquierda
-
+        if (!get_in_unique_screen() && get_in_split_screen()) {
+            kill_left_split_screen();
+        }
     } else if (scancode == 62) { //F4 -> suspendo/reanudo proceso pantalla izquierda
-
+        if (!get_in_unique_screen() && get_in_split_screen()) {
+            suspend_left_split_screen();
+        }
     } else if (scancode == 63) { //F5 -> termino proceso pantalla derecha
-
+        if (get_in_split_screen()) {
+            suspend_right_split_screen();
+        }
     } else if (scancode == 64) { //F6 -> suspendo/reanudo proceso pantalla derecha
-
+        // if (get_in_split_screen()) {
+        //     ncStopSplitScreen();
+        //     stop_right_split_screen();
+        // }
     } else {
         if (lower_array[scancode] != 0) {
             char letter;

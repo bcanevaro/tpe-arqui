@@ -125,6 +125,7 @@ void terminal(){
         int found = 0;
         for(int i = 0; !found && i < COMMS_LEN - 1; i++){
             if(strcmp(buffer, commands[i]) == 0){
+                start_unique_screen();
                 arguments function_arguments = {1, -1};
                 load_process(commands_functions[i], &function_arguments);
                 hibernate_process(2);
@@ -141,6 +142,7 @@ void terminal(){
                     mem_address[j] = buffer[i];
                 }
                 mem_address[j] = 0;
+                start_unique_screen();
                 arguments function_arguments = {1, mem_address};
                 load_process(&print_mem, &function_arguments);
                 hibernate_process(2);

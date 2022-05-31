@@ -16,6 +16,7 @@ int seconds_elapsed();
 int system_datetime(uint64_t * info);
 int print_byte_from_mem(unsigned int fd, uint8_t * address);
 int start_split_screen();
+int start_unique_screen();
 int load_process(uint64_t function, arguments * args_function);
 int hibernate_process(int pid);
 

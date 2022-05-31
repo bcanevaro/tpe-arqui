@@ -16,13 +16,22 @@ typedef struct {
     char active;
 } task;
 
-
+// Task/Process Management
 int load_processes(uint64_t rip, int fd, char * string);
 void exec_process(int pid);
 void scheduler(void);
 int hibernate_process(int pid);
+
+// Screen Management
 void set_in_split_screen(char value);
 char get_in_split_screen();
-void stop_split_screen();
+void set_in_unique_screen(char value);
+char get_in_unique_screen();
 
+// Unique Screen Kill/Resume-Pause
+void kill_unique_process();
+void suspend_unique_process();
+
+// Split Screen Kill/Resume-Pause
+void stop_split_screen();
 #endif
