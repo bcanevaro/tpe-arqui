@@ -27,37 +27,35 @@ void while1() {
     while (1);
 }
 
+void load_dummy_process(){
+    task while1_task = {
+            .rip = &while1,
+            .rsp = initialize_process(STACK_BASE, &while1, -1, -1),
+            .stack_base = STACK_BASE,
+            .active = PAUSED
+        };
+    processes[0] = while1_task;
+}
+
 // Cuando llamamos al pipe se tiene que ejecutar la siguiente funcion;
 //Función que crea una task y la agrega al array processes
 //devuelve el pid
 int load_processes(uint64_t rip, int fd, char * string) {
     if (process_qty == 0) {
-        task while1_task = {
-            .rip = &while1,
-            .rsp = initialize_process(STACK_BASE + PROCESS_SIZE * process_qty, &while1, -1, -1),
-            .stack_base = STACK_BASE + PROCESS_SIZE * process_qty,
-            .active = PAUSED
-        };
-        processes[process_qty++] = while1_task;
+        load_dummy_process();
+        process_qty++;
     }
     int found = 0;
     int i;
-    for(i = 3; i < process_qty && !found; i++){
-        if(processes[i].active == FINISHED){
-            found = 1;
-        }
-    }
-    if(!found){
-        task new_task = {
-            .rip = rip,
-            .rsp = initialize_process(STACK_BASE + PROCESS_SIZE * process_qty, rip,fd,string),
-            .stack_base = STACK_BASE + PROCESS_SIZE * process_qty,
-            .active = IDLE
-        };
-        processes[process_qty++] = new_task;
-        running_processes++;
-        return process_qty - 1;
-    }
+    task new_task = {
+        .rip = rip,
+        .rsp = initialize_process(STACK_BASE + PROCESS_SIZE * process_qty, rip,fd,string),
+        .stack_base = STACK_BASE + PROCESS_SIZE * process_qty,
+        .active = IDLE
+    };
+    processes[process_qty++] = new_task;
+    running_processes++;
+    return process_qty - 1;
 }
 
 void current_process_returned() {
@@ -141,6 +139,7 @@ void scheduler(){
     }
     pause_process(current_pid);
     if (running_processes == 0) {
+        load_dummy_process();
         exec_process(0);
     }
     int next_pid_to_run = (current_pid + 1) % process_qty;
