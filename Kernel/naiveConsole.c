@@ -24,6 +24,18 @@ static int leftIndex = 0;
 static int leftVerticalIndex = 0;
 static int rightVerticalIndex = 0;
 static int rightIndex = 0;
+static char blink = 0;
+
+void ncBlinkCursor() {
+	if (blink) {
+		*(currentVideo) = 219;
+		*(currentVideo + 1) = ( 0x00 | BLACK ) << 4 | L_GRAY;
+	} else {
+		*(currentVideo) = ' ';
+		*(currentVideo + 1) = ( 0x00 | BLACK ) << 4 | L_GRAY;
+	}
+	blink = !blink;
+}
 
 static uint8_t * ncGetPosition(int x, int y) {
 	return video + width * 2 * x + y * 2;
@@ -75,6 +87,9 @@ void ncNewline(int fd)
 }
 
 void ncBackspace() {
+	//The next two lines are for the cursor
+	*(currentVideo) = ' ';
+	*(currentVideo + 1) = 0x07;
 	currentVideo -= 2;
 	*currentVideo = ' ';
 	*(currentVideo + 1) = 0x07;
