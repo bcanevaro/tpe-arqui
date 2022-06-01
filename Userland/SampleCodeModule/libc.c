@@ -37,7 +37,7 @@ int str_to_num (char * str) {
 }
 
 uint64_t str_to_hex(char * str){
-    int num = 0;
+    uint64_t num = 0;
     for (int i = 2; str[i] != 0; i++) {
         num *= 16;
         if(str[i] == 'A' || str[i] == 'a'){
