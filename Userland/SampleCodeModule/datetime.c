@@ -4,9 +4,31 @@
 void datetime(unsigned int fd) {
     uint64_t realtime[6];
     system_datetime(realtime);
-    // TODO -> tener en cuenta los días y eso.
     if(realtime[2] >= 0 && realtime[2] <= 2){
         realtime[2] += 21;
+        if(realtime[3] > 1 && realtime[3] <= 31){
+            realtime[3] -= 1;
+        }
+        if(realtime[3] == 1){
+            if(realtime[4] == 1){
+                realtime[3] = 31;
+                realtime[4] = 12;
+                realtime[5] -= 1;
+            }else if(previous_is_large_month(realtime[4])){
+                realtime[3] = 31;
+                realtime[4]--;
+            }else if(previous_is_short_month(realtime[4])){
+                realtime[3] = 30;
+                realtime[4]--;
+            }else{
+                if(is_a_leap_year(realtime[5])){
+                    realtime[3] = 29;
+                }else{
+                    realtime[3] = 28;
+                }
+                realtime[4]--;
+            }
+        }
     }else{
         realtime[2] -= 3;
     }
@@ -41,4 +63,30 @@ void datetime(unsigned int fd) {
     write(fd, str_seconds, strlen(str_seconds));
     write(fd, "\n", 1);
     return;
+}
+
+int previous_is_large_month(uint64_t month){
+    if(month == 2 || month == 4 || month == 6 || month == 8 || month == 9 || month == 11){
+        return 1;
+    }
+    return 0;
+}
+
+int previous_is_short_month(uint64_t month){
+    if(month == 5 || month == 7 || month == 10 || month == 12){
+        return 1;
+    }
+    return 0;
+}
+
+int is_a_leap_year(uint64_t year){
+    if (year % 400 == 0)
+        return 1;
+ 
+    if (year % 100 == 0)
+        return 0;
+ 
+    if (year % 4 == 0)
+        return 1;
+    return 0;
 }

@@ -170,11 +170,14 @@ int pipe_validation(char * buffer, int * func1, int * func2, char * address_1, c
     while(buffer[i] != '|'){
         str1[j++] = buffer[i++];
     }
-    i++;
+    if(str1[j-1] != ' ' && buffer[i+1] != ' '){
+        return 0;
+    }
+    i += 2;
     while(buffer[i]){
         str2[k++] = buffer[i++];
     }
-    str1[j] = 0;
+    str1[j-1] = 0;
     str2[k] = 0;
     *func1 = command_validation(str1, address_1);
     *func2 = command_validation(str2, address_2);
