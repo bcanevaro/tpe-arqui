@@ -37,5 +37,7 @@ void haltcpu(void);
 uint64_t get_current_rip(void);
 uint64_t get_current_rsp(void);
 uint64_t * get_current_gp_registers(void);
+uint64_t * get_registers_for_inforeg(void);
+
 
 #endif /* INTERRUPS_H_ */

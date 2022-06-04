@@ -26,6 +26,8 @@ GLOBAL get_current_rip
 GLOBAL get_current_rsp
 GLOBAL get_current_gp_registers
 
+GLOBAL get_registers_for_inforeg
+
 SECTION .text
 
 %macro pushState 0
@@ -165,6 +167,25 @@ _irq00Handler:
 
 ;Keyboard
 _irq01Handler:
+	mov [registers_for_inforeg], rax
+	mov [registers_for_inforeg+8], rbx
+	mov [registers_for_inforeg+16], rcx
+	mov [registers_for_inforeg+24], rdx
+	mov [registers_for_inforeg+32], rbp
+	mov [registers_for_inforeg+40], rdi
+	mov [registers_for_inforeg+48], rsi
+	push rax ;voy a usar RAX para guardar RSP en el array
+	mov rax, [rsp+32]
+	mov [registers_for_inforeg+56], rax
+	pop rax
+	mov [registers_for_inforeg+64], r8
+	mov [registers_for_inforeg+72], r9
+	mov [registers_for_inforeg+80], r10
+	mov [registers_for_inforeg+88], r11
+	mov [registers_for_inforeg+96], r12
+	mov [registers_for_inforeg+104], r13
+	mov [registers_for_inforeg+112], r14
+	mov [registers_for_inforeg+120], r15
 	irqHandlerMaster 1
 
 ;Cascade pic never called
@@ -243,7 +264,14 @@ get_current_gp_registers:
 	leave
 	ret
 
+get_registers_for_inforeg:
+	enter 0,0
+	mov rax, registers_for_inforeg
+	leave
+	ret
+
 section .bss
 	current_rip resq 1
 	current_rsp resq 1
 	current_gp_registers resq 15
+	registers_for_inforeg resq 16

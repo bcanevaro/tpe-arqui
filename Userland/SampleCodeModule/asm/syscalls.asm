@@ -8,6 +8,7 @@ GLOBAL start_split_screen
 GLOBAL load_process
 GLOBAL hibernate_process
 GLOBAL start_unique_screen
+GLOBAL get_inforeg_regs
 
 
 section .text
@@ -99,6 +100,15 @@ start_unique_screen:
     enter 0, 0
 
     mov rax, 0x09
+    int 80h
+
+    leave
+    ret
+
+get_inforeg_regs:
+    enter 0, 0
+
+    mov rax, 0x0a
     int 80h
 
     leave

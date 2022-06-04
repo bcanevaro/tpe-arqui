@@ -8,7 +8,7 @@
 #include <scheduler.h>
 
 typedef int (*sys_call)(unsigned int, char *, unsigned int);
-static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime, &sys_print_byte_from_mem, &sys_start_split_screen, &sys_load_process, &sys_hibernate_process, &sys_start_unique_screen};
+static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime, &sys_print_byte_from_mem, &sys_start_split_screen, &sys_load_process, &sys_hibernate_process, &sys_start_unique_screen, &sys_get_inforeg_regs};
 
 typedef uint8_t (*rtc_argument)(void);
 static rtc_argument realtime[] = {&rtc_seconds, &rtc_minutes, &rtc_hours, &rtc_day, &rtc_month, &rtc_year};
@@ -94,13 +94,8 @@ int sys_print_byte_from_mem(unsigned int fd, uint8_t * address, uint64_t rdx) {
 }
 
 int sys_start_split_screen(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
-    // if(functions != 0 && functions[0] != 0 && functions[1] != 0) {
     ncStartSplitScreen();
     set_in_split_screen(1);
-    //     int pid_left = es(functions[0],args_f1->integer,args_f1->string);
-    //     int pid_right = load_processes(functions[1],args_f2->integer,args_f2->string);
-    //     activate_scheduler();
-    // }
     return 1;
 }
 
@@ -122,4 +117,9 @@ int sys_hibernate_process(int pid, uint64_t rsi, uint64_t rdx) {
 int sys_start_unique_screen(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
     set_in_unique_screen(1);
     return 1;
+}
+
+int sys_get_inforeg_regs(uint64_t ** result, uint64_t rsi, uint64_t rdx) {
+    (*result) = get_inforeg_registers();
+    return get_saved_inforeg_registers();
 }

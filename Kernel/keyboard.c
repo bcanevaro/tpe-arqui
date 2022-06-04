@@ -36,6 +36,10 @@ static uint8_t caps_lock_array[] = {
 char buffer[256];
 int actualDim = 0;
 
+#define INFOREG_REGISTER_COUNT 16
+uint64_t inforeg_registers[INFOREG_REGISTER_COUNT];
+char saved_inforeg_registers = 0;
+
 char * get_buffer(){
     return buffer;
 }
@@ -80,6 +84,12 @@ void keyboard_handler() {
         if (!get_in_unique_screen() && get_in_split_screen()) {
             suspend_right_split_screen();
         }
+    } else if (scancode == 68) { //F10 -> guardo registros para inforeg
+        uint64_t * r = get_registers_for_inforeg();
+        for (int i = 0; i < INFOREG_REGISTER_COUNT; i++) {
+            inforeg_registers[i] = r[i];
+        }
+        saved_inforeg_registers = 1;
     } else {
         if (lower_array[scancode] != 0) {
             char letter;
@@ -95,4 +105,12 @@ void keyboard_handler() {
             }
         }
     }
+}
+
+uint64_t * get_inforeg_registers() {
+    return inforeg_registers;
+}
+
+char get_saved_inforeg_registers() {
+    return saved_inforeg_registers;
 }
