@@ -20,7 +20,7 @@ int syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t syscall
 int sys_write(unsigned int fd, const char * buf, unsigned int count) {
     color foreground = L_GRAY;
     color background = BLACK;
-    if (fd == STDERR) {
+    if (fd == STDERR || fd == LEFTERR || fd == RIGHTERR) {
         foreground = RED;
     }
     int i;

@@ -5,7 +5,7 @@ static unsigned long ticks = 0;
 
 void timer_handler() {
 	ticks++;
-	if (ticks % 6 == 0) {
+	if (ticks % 6 == 0 && get_current_pid() == 2) {
 		ncBlinkCursor();
 	}
 	scheduler();

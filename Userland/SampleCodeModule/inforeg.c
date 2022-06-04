@@ -11,7 +11,7 @@ void inforeg(unsigned int fd) {
     uint64_t * register_array_pointer[1];
     int saved_state = get_inforeg_regs(register_array_pointer);
     if (!saved_state) {
-        char message[] = "A state wasn't saved. Touch F10 to save a state.";
+        char message[] = "A state wasn't saved. Touch F10 to save a state.\n";
         write(fd+1, message, strlen(message));
     } else {
         print_regs(fd, register_array_pointer[0]);

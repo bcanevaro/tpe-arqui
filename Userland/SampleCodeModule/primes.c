@@ -28,7 +28,7 @@ void primes(unsigned int fd) {
         write(fd, "\n", 1);
 
         counter++;
-        // sleep(1);
+        sleep(1);
     }
 }
 

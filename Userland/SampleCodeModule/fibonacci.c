@@ -36,7 +36,7 @@ void fibonacci(unsigned int fd) {
         write(fd, str2, str2_length);
         write(fd, str, length + 1);
         write(fd, str3, str3_length);
-        // sleep(1);
+        sleep(1);
     }
 }
 
