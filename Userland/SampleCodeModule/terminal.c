@@ -27,10 +27,7 @@ void error();
 int print_mem_validation(char * buffer);
 int pipe_validation(char * buffer, int * func1, int * func2, char * address_1, char * address_2);
 int command_validation(char * command, char * address);
-void prueba(){
 
-}
-// Falta el ctrl + c
 void terminal(){
     /*
         1.1 Tenemos que printear esto "$> "

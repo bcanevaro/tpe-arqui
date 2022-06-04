@@ -43,6 +43,12 @@ static uint8_t * ncGetPosition(int x, int y) {
 
 void ncStartSplitScreen() {
 	ncClear();
+	currentLeft = left;
+	currentRight = right;
+	leftIndex = 0;
+	leftVerticalIndex = 0;
+	rightVerticalIndex = 0;
+	rightIndex = 0;
 	for (int i = 0; i < height; i++) {
 		uint8_t * ad = ncGetPosition(i, semi_width);
 		*(ad) = '|';
@@ -56,12 +62,6 @@ void ncStartSplitScreen() {
 
 void ncStopSplitScreen() {
 	ncClear();
-	currentLeft = left;
-	currentRight = right;
-	leftIndex = 0;
-	leftVerticalIndex = 0;
-	rightVerticalIndex = 0;
-	rightIndex = 0;
 }
 
 void ncPrint(int fd, const char * string)

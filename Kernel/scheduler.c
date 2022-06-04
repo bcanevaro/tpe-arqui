@@ -64,11 +64,7 @@ void current_process_returned() {
     running_processes--;
     if (!in_split_screen) {
         process_qty--;
-        // if (process_qty <= 3) {
-        //     task terminal_task = processes[2];
-        //     terminal_task.status = IDLE;
-        //     processes[2] = terminal_task;
-        // }
+        set_in_unique_screen(0);
         update_status(2, ACTIVE);
         running_processes++;
     }

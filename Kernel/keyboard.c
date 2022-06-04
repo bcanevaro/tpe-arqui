@@ -86,6 +86,7 @@ void keyboard_handler() {
         }
     } else if (scancode == 68) { //F10 -> guardo registros para inforeg
         uint64_t * r = get_registers_for_inforeg();
+        // Los tengo que copiar a otro vector porque el array que está en ASM se actualiza todo el tiempo
         for (int i = 0; i < INFOREG_REGISTER_COUNT; i++) {
             inforeg_registers[i] = r[i];
         }
