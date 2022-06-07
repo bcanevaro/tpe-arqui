@@ -1,9 +1,7 @@
-
 GLOBAL _cli
 GLOBAL _sti
 GLOBAL picMasterMask
 GLOBAL picSlaveMask
-GLOBAL haltcpu
 GLOBAL _hlt
 
 GLOBAL _irq00Handler
@@ -67,7 +65,7 @@ SECTION .text
 %endmacro
 
 %macro saveContext 0 
-	push rax ;voy a usar RAX para pasar los punteros
+	push rax ;se utiliza RAX para pasar los punteros
 	mov rax, [rsp+8]
 	mov [current_rip],rax
 	add rsp,24
@@ -146,7 +144,7 @@ picSlaveMask:
 	push    rbp
     mov     rbp, rsp
     mov     ax, di  ; ax = mascara de 16 bits
-    out	0A1h,al
+    out		0A1h,al
     pop     rbp
     retn
 
@@ -174,7 +172,7 @@ _irq01Handler:
 	mov [registers_for_inforeg+32], rbp
 	mov [registers_for_inforeg+40], rdi
 	mov [registers_for_inforeg+48], rsi
-	push rax ;voy a usar RAX para guardar RSP en el array
+	push rax ;se utiliza RAX para guardar RSP en el array
 	mov rax, [rsp+32]
 	mov [registers_for_inforeg+56], rax
 	pop rax
@@ -240,11 +238,6 @@ _exception0Handler:
 ;Invalid Opcode Exception
 _exception6Handler:
 	exceptionHandler 6
-
-haltcpu:
-	cli
-	hlt
-	ret
 
 get_current_rip:
 	enter 0,0

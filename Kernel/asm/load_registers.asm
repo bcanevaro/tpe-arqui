@@ -1,7 +1,7 @@
 GLOBAL load_registers
 section .text
  
-    ; https://os.phil-opp.com/handling-exceptions/ 
+    ; Retreived from https://os.phil-opp.com/handling-exceptions/ 
     ; STACK
     ;	RBP     -> stack frame
     ;   RIP     -> dirección de retorno
@@ -25,11 +25,11 @@ section .text
     ;   RFLAGS
     ;   RSP
     ;   SS
+
 load_registers:
     enter 0, 0
 
     mov rbx, 0
-
 .loop:
     mov rax, [rbp+rbx+16]
     mov [registers+rbx], rax

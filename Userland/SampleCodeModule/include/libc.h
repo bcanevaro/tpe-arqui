@@ -5,7 +5,6 @@
 #include <syscalls.h>
 
 #define MEM_DUMP_LEN 32
-#define BASE_HEX 16
 
 int strcmp(char * str1, char * str2);
 int strlen(char * str);

@@ -15,8 +15,10 @@ static void excepHandler(int message_index, uint64_t * registers);
 
 
 static Exception exceptions[]={&zero_division, 0, 0, 0, 0, 0, &invalid_opcode};
-static char * message[][2] = {{"----- Zero Division Exception --------------------------------------------------", "----- Invalid Opcode Exception -------------------------------------------------"},
-							  {"----- Zero Division Exception ---------", "----- Invalid Opcode Exception --------"}};
+static char * message[][2] = {{"----- Zero Division Exception --------------------------------------------------",
+							   "----- Invalid Opcode Exception -------------------------------------------------"},
+							  {"----- Zero Division Exception ---------",
+							   "----- Invalid Opcode Exception --------"}};
 static char * separator[2] = {"--------------------------------------------------------------------------------",
 							  "---------------------------------------"};
 

@@ -3,10 +3,10 @@
 #define SYSCALL_DISPATCHER_H
 
 typedef struct {
-    //-1 si no se ingresa
+    // -1 si no se ingresa
     int integer;
     char * string;
-}arguments;
+} arguments;
 
 int sys_write(unsigned int fd, const char * buf, unsigned int count);
 int sys_read(unsigned int fd, char * buf, unsigned int count);

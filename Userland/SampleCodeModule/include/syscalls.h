@@ -4,13 +4,13 @@
 #include <stdint.h>
 
 typedef struct {
-    //-1 si no se ingresa
+    // -1 si no se ingresa
     int integer;
     char * string;
-}arguments;
+} arguments;
 
-int write(int fd, const char * buf, int count);
 int read(int fd, char * buf, int count);
+int write(int fd, const char * buf, int count);
 int clear_screen();
 int seconds_elapsed();
 int system_datetime(uint64_t * info);

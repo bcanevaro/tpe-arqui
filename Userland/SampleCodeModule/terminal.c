@@ -28,21 +28,7 @@ int print_mem_validation(char * buffer);
 int pipe_validation(char * buffer, int * func1, int * func2, char * address_1, char * address_2);
 int command_validation(char * command, char * address);
 
-void terminal(){
-    /*
-        1.1 Tenemos que printear esto "$> "
-        1.2 El usuario no debe poder borrar el prompt
-        2.1 Lectura de comandos. Detectar los siguientes comandos:
-            divide_by_zero
-            invalid_opcode
-            help
-            inforeg
-            fibonacci
-            primesPRINT_MEMme: imprime dia y hora del sistema
-            clear
-            * | *
-        2.2 Con el enter 
-    */
+void terminal() {
     flush_buffer();
     int pipe = 0;
     write(1, "$> ", 3);
@@ -184,6 +170,7 @@ int pipe_validation(char * buffer, int * func1, int * func2, char * address_1, c
     }
     return 1;
 }
+
 // Me devuelve la posicion del vector de punteros a funcion del 0 al 7
 // si me devuelve 8 entonces es print_mem. Sino devuelve el -1;
 int command_validation(char * command, char * address) {
@@ -206,6 +193,7 @@ int command_validation(char * command, char * address) {
     }
     return found;
 }
+
 // Printmem command verification
 int print_mem_validation(char * buffer){
     int is_print_mem = 1;

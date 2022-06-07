@@ -108,8 +108,7 @@ int sys_load_process(uint64_t function, arguments * args_function, uint64_t rdx)
     return pid;
 }
 
-// Pause Process (para terminal y userland. se corre demas programas y quedan en
-// estado de hibernacion)
+// Pause Process (para terminal y userland. se corre demas programas y quedan en estado de hibernacion)
 int sys_hibernate_process(int pid, uint64_t rsi, uint64_t rdx) {
     return hibernate_process(pid);
 }

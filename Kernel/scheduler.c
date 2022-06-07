@@ -41,8 +41,8 @@ void load_dummy_process(){
 }
 
 // Cuando llamamos al pipe se tiene que ejecutar la siguiente funcion;
-//Función que crea una task y la agrega al array processes
-//devuelve el pid
+// Función que crea una task y la agrega al array processes
+// devuelve el pid
 int load_processes(uint64_t rip, int fd, char * string) {
     if (process_qty == 0) {
         load_dummy_process();
@@ -72,8 +72,8 @@ void current_process_returned() {
     scheduler();
 }
 
-//Guarda la current task a ejecutar, teniendo en cuenta el pid que recibe como argumento
-//actualiza el current pid y corre el proceso
+// Guarda la current task a ejecutar, teniendo en cuenta el pid que recibe como argumento
+// actualiza el current pid y corre el proceso
 void exec_process(int pid){
     if ( pid < 0 || pid >= process_qty) {
         return;
@@ -87,8 +87,8 @@ void exec_process(int pid){
     run_process(current_task.rsp);
 }
 
-//Obtiene el proceso de acuerdo al pid recibido por argumento
-//y realiza la actualizacion de RIP y RSP de la task
+// Obtiene el proceso de acuerdo al pid recibido por argumento
+// y realiza la actualizacion de RIP y RSP de la task
 void pause_process(int pid) {
     if ( pid < 0 || pid >= process_qty ) {
         return;
@@ -171,8 +171,7 @@ void kill_unique_process() {
     set_in_unique_screen(0);
     update_status(3, FINISHED);
 
-    // Esto lo hago por si quiero killear el programa cuando se encontraba
-    // en pausa.
+    // Esto lo hago por si quiero killear el programa cuando se encontraba en pausa.
     if (running_processes) {
         running_processes--;
     }
