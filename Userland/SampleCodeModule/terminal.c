@@ -9,6 +9,7 @@
 #include <datetime.h>
 #include <clear.h>
 #include <print_mem.h>
+#include <play.h>
 
 #define PRINT_MEM_POS 8
 #define COMMS_LEN 9
@@ -16,11 +17,11 @@
 #define BUFFER_LEN 256
 static char print_memory[] = "printmem ";
 static char * commands[]={"help", "divide_by_zero", "invalid_opcode", "inforeg",  
-                            "fibonacci", "primes", "datetime", "clear"};
+                            "fibonacci", "primes", "datetime", "clear","play"};
 
 typedef void (*Command)(unsigned int);
 static Command commands_functions[] = {&help, &divide_by_zero, &invalid_opcode, &inforeg,  
-                                        &fibonacci, &primes, &datetime, &clear};
+                                        &fibonacci, &primes, &datetime, &clear,&play};
 
 void terminal();
 void error();

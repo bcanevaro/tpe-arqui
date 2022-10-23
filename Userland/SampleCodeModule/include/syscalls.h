@@ -20,5 +20,6 @@ int start_unique_screen();
 int load_process(uint64_t function, arguments * args_function);
 int hibernate_process(int pid);
 int get_inforeg_regs(uint64_t ** results);
+int move(int fd, const char *buf, int count);
 
 #endif

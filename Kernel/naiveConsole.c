@@ -20,6 +20,8 @@ static uint8_t * const left = (uint8_t*)0xB8000;
 static uint8_t * const right = (uint8_t*)0xB8052;
 static uint8_t * currentLeft = (uint8_t*)0xB8000;
 static uint8_t * currentRight = (uint8_t*)0xB8052;
+static uint8_t * currentPlayer1 = (uint8_t*)0xB8052; // cambiarlo
+static uint8_t * currentPlayer2 = (uint8_t*)0xB8052; //cambiarlo
 static int leftIndex = 0;
 static int leftVerticalIndex = 0;
 static int rightVerticalIndex = 0;
@@ -243,6 +245,23 @@ void ncPrintColorfulChar(int fd, char c, color foreground, color background) {
 		rightIndex++;
 	}
 	
+}
+
+ncPrintMove(int fd, char c, color foreground, color background,int player){
+	if(player==1){
+	*currentPlayer1 = c;
+	if(c=="d" || c=="D")
+		*(currentPlayer1 + 1) = ( 0x00 | background ) << 4 | foreground;
+	else if(c=="a" || c=="A")
+		*(currentPlayer1 - 1) = ( 0x00 | background ) << 4 | foreground;
+	else if(c=="w" || c=="W")
+		*(currentPlayer1 - 1) = ( 0x00 | background ) << 4 | foreground; // averiguar para ir arriba
+	else if(c=="s" || c=="S")
+		*(currentPlayer1 - 1) = ( 0x00 | background ) << 4 | foreground;  // averiguar para ir abajo
+	}
+	else{
+		
+	}
 }
 
 void ncPrintColorful(int fd, char * str, color foreground, color background) {

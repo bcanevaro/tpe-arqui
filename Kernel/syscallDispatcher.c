@@ -8,7 +8,7 @@
 #include <scheduler.h>
 
 typedef int (*sys_call)(unsigned int, char *, unsigned int);
-static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime, &sys_print_byte_from_mem, &sys_start_split_screen, &sys_load_process, &sys_hibernate_process, &sys_start_unique_screen, &sys_get_inforeg_regs};
+static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime, &sys_print_byte_from_mem, &sys_start_split_screen, &sys_load_process, &sys_hibernate_process, &sys_start_unique_screen, &sys_get_inforeg_regs,&sys_move};
 
 typedef uint8_t (*rtc_argument)(void);
 static rtc_argument realtime[] = {&rtc_seconds, &rtc_minutes, &rtc_hours, &rtc_day, &rtc_month, &rtc_year};
@@ -41,6 +41,10 @@ int sys_write(unsigned int fd, const char * buf, unsigned int count) {
         }
     }
     return i;
+}
+
+sys_move(unsigned int fd, const char * buf, unsigned int count){
+    ncPrintMove(fd,foreground,background);
 }
 
 int sys_read(unsigned int fd, char * buf, unsigned int count){
