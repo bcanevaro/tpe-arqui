@@ -11,8 +11,8 @@
 #include <print_mem.h>
 #include <play.h>
 
-#define PRINT_MEM_POS 8
-#define COMMS_LEN 9
+#define PRINT_MEM_POS 9
+#define COMMS_LEN 10
 #define MAX_ADDRESS_LEN 16
 #define BUFFER_LEN 256
 static char print_memory[] = "printmem ";
@@ -131,7 +131,8 @@ void terminal() {
                 arguments function_arguments = {1, mem_address};
                 load_process(&print_mem, &function_arguments);
                 hibernate_process(2);
-            }else{
+            }
+            else{
                 error();
             }
         }
@@ -172,8 +173,8 @@ int pipe_validation(char * buffer, int * func1, int * func2, char * address_1, c
     return 1;
 }
 
-// Me devuelve la posicion del vector de punteros a funcion del 0 al 7
-// si me devuelve 8 entonces es print_mem. Sino devuelve el -1;
+// Me devuelve la posicion del vector de punteros a funcion del 0 al 8
+// si me devuelve 9 entonces es print_mem. Sino devuelve el -1;
 int command_validation(char * command, char * address) {
     int found = -1;
     int i;

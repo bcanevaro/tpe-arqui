@@ -1,5 +1,5 @@
 #ifndef PLAY_H
 #define PLAY_H
-void play();
+void play(unsigned int fd);
 
 #endif

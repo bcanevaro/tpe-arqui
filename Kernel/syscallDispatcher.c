@@ -43,8 +43,9 @@ int sys_write(unsigned int fd, const char * buf, unsigned int count) {
     return i;
 }
 
-sys_move(unsigned int fd, const char * buf, unsigned int count){
-    ncPrintMove(fd,foreground,background);
+int sys_move(unsigned int fd, int direction, uint8_t* position, color foreground, color background){
+    moveAndPaintPixel(fd,direction,position,foreground,background);
+    return 1;
 }
 
 int sys_read(unsigned int fd, char * buf, unsigned int count){
