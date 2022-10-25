@@ -7,6 +7,11 @@
 #define RIGHTOUT 5
 #define RIGHTERR 6
 
+#define DOWN    0
+#define UP      1
+#define LEFT    2
+#define RIGHT   3
+
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
 static char buffer[64] = { '0' };
@@ -15,13 +20,13 @@ static uint8_t * currentVideo = (uint8_t*)0xB8000;
 static const uint32_t width = 80;
 static const uint32_t height = 25;
 
+
 static const uint32_t semi_width = 39;
 static uint8_t * const left = (uint8_t*)0xB8000;
 static uint8_t * const right = (uint8_t*)0xB8052;
 static uint8_t * currentLeft = (uint8_t*)0xB8000;
 static uint8_t * currentRight = (uint8_t*)0xB8052;
-static uint8_t * currentPlayer1 = (uint8_t*)0xB8052; // cambiarlo
-static uint8_t * currentPlayer2 = (uint8_t*)0xB8052; //cambiarlo
+
 static int leftIndex = 0;
 static int leftVerticalIndex = 0;
 static int rightVerticalIndex = 0;
@@ -244,25 +249,31 @@ void ncPrintColorfulChar(int fd, char c, color foreground, color background) {
 		currentRight += 2;
 		rightIndex++;
 	}
-	
 }
 
-ncPrintMove(int fd, char c, color foreground, color background,int player){
-	if(player==1){
-	*currentPlayer1 = c;
-	if(c=="d" || c=="D")
-		*(currentPlayer1 + 1) = ( 0x00 | background ) << 4 | foreground;
-	else if(c=="a" || c=="A")
-		*(currentPlayer1 - 1) = ( 0x00 | background ) << 4 | foreground;
-	else if(c=="w" || c=="W")
-		*(currentPlayer1 - 1) = ( 0x00 | background ) << 4 | foreground; // averiguar para ir arriba
-	else if(c=="s" || c=="S")
-		*(currentPlayer1 - 1) = ( 0x00 | background ) << 4 | foreground;  // averiguar para ir abajo
+void moveAndPaintPixel(unsigned int fd, int direction, uint8_t* position, color foreground, color background){
+	if(direction == RIGHT){
+		position += 2;
+		*(position) = '-';
+		*(position + 1) = ( 0x00 | background ) << 4 | foreground;
 	}
-	else{
-		
+	else if(direction == LEFT){
+		position -= 2;
+		*(position) = '-';
+		*(position + 1) = ( 0x00 | background ) << 4 | foreground;
+	}
+	else if(direction == UP){
+		position -= 2 * width;
+		*(position) = '|';
+		*(position + 1) = ( 0x00 | background ) << 4 | foreground;
+	}
+	else if(direction == DOWN){
+		position += 2 * width;
+		*(position) = '|';
+		*(position + 1) = ( 0x00 | background ) << 4 | foreground;
 	}
 }
+
 
 void ncPrintColorful(int fd, char * str, color foreground, color background) {
 	for (int i = 0; str[i] != 0; i++) {

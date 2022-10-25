@@ -9,7 +9,7 @@ GLOBAL load_process
 GLOBAL hibernate_process
 GLOBAL start_unique_screen
 GLOBAL get_inforeg_regs
-
+GLOBAL move
 
 section .text
 
@@ -109,6 +109,15 @@ get_inforeg_regs:
     enter 0, 0
 
     mov rax, 0x0a
+    int 80h
+
+    leave
+    ret
+
+move:
+    enter 0,0
+
+    mov rax,0x0b
     int 80h
 
     leave

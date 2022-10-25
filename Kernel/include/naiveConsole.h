@@ -40,6 +40,7 @@ void ncPrintBin(int fd, uint64_t value);
 void ncPrintBase(int fd, uint64_t value, uint32_t base);
 void ncClear();
 void ncBackspace();
+void moveAndPaintPixel(unsigned int fd, int direction, uint8_t * position, color foreground, color background);
 
 void ncStartSplitScreen();
 void ncStopSplitScreen();
