@@ -253,22 +253,18 @@ void ncPrintColorfulChar(int fd, char c, color foreground, color background) {
 
 void moveAndPaintPixel(unsigned int fd, int direction, uint8_t* position, color foreground, color background){
 	if(direction == RIGHT){
-		position += 2;
 		*(position) = '-';
 		*(position + 1) = ( 0x00 | background ) << 4 | foreground;
 	}
 	else if(direction == LEFT){
-		position -= 2;
 		*(position) = '-';
 		*(position + 1) = ( 0x00 | background ) << 4 | foreground;
 	}
 	else if(direction == UP){
-		position -= 2 * width;
 		*(position) = '|';
 		*(position + 1) = ( 0x00 | background ) << 4 | foreground;
 	}
 	else if(direction == DOWN){
-		position += 2 * width;
 		*(position) = '|';
 		*(position + 1) = ( 0x00 | background ) << 4 | foreground;
 	}

@@ -56,15 +56,19 @@ void drawMovement(char c, int player){
         color foreground = RED;
 		playersPaintedPixels[((uint32_t)currentPlayer1Pos - 0xB8000)/2] = 1;
 		if(c=='d' || c=='D'){
+            currentPlayer1Pos += 2;
             move(1,RIGHT,currentPlayer1Pos,foreground,background);
 		}
 		else if(c=='a' || c=='A'){
+            currentPlayer1Pos -= 2;
             move(1,LEFT,currentPlayer1Pos,foreground,background);
 		}
 		else if(c=='w' || c=='W'){
+            currentPlayer1Pos -= 2 * width;
             move(1,UP,currentPlayer1Pos,foreground,background);
 		}
 		else if(c=='s' || c=='S'){
+            currentPlayer1Pos += 2 * width;
 			move(1,DOWN,currentPlayer1Pos,foreground,background);
 		}
 	}
@@ -73,15 +77,19 @@ void drawMovement(char c, int player){
         color foreground = BLUE;
 		playersPaintedPixels[((uint32_t)currentPlayer2Pos - 0xB8000)/2] = 1;
 		if(c=='l' || c=='L'){
+            currentPlayer2Pos += 2;
 			move(1,RIGHT,currentPlayer2Pos,foreground,background);
 		}
 		else if(c=='j' || c=='J'){
+            currentPlayer2Pos -= 2;
 			move(1,LEFT,currentPlayer2Pos,foreground,background);
 		}
 		else if(c=='i' || c=='I'){
+            currentPlayer2Pos -= 2 * width;
 			move(1,UP,currentPlayer2Pos,foreground,background);
 		}
 		else if(c=='k' || c=='K'){
+            currentPlayer2Pos += 2 * width;
 			move(1,DOWN,currentPlayer2Pos,foreground,background);
 		}
 	}
