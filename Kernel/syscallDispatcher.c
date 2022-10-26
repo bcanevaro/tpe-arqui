@@ -8,7 +8,8 @@
 #include <scheduler.h>
 
 typedef int (*sys_call)(unsigned int, char *, unsigned int);
-static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime, &sys_print_byte_from_mem, &sys_start_split_screen, &sys_load_process, &sys_hibernate_process, &sys_start_unique_screen, &sys_get_inforeg_regs,&sys_move};
+static sys_call system_call[] = {&sys_read, &sys_write, &sys_clear, &sys_seconds_elapsed, &sys_datetime, &sys_print_byte_from_mem, &sys_start_split_screen, &sys_load_process, &sys_hibernate_process, &sys_start_unique_screen, &sys_get_inforeg_regs,&sys_move,&sys_miliseconds_elapsed
+};
 
 typedef uint8_t (*rtc_argument)(void);
 static rtc_argument realtime[] = {&rtc_seconds, &rtc_minutes, &rtc_hours, &rtc_day, &rtc_month, &rtc_year};
@@ -69,6 +70,10 @@ int sys_clear(uint64_t rdi, uint64_t rsi, uint64_t rdx){
 
 int sys_seconds_elapsed(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
     return seconds_elapsed();
+}
+
+int sys_miliseconds_elapsed(uint64_t rdi, uint64_t rsi, uint64_t rdx){
+    return miliseconds_elapsed();
 }
 
 int sys_datetime(uint64_t * info, uint64_t rsi, uint64_t rdx){

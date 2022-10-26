@@ -18,5 +18,9 @@ int ticks_elapsed() {
 
 // Me devuelve la cantidad de segundos que pasaron.
 int seconds_elapsed() {
-	return ticks / 18;
+	return ticks/18;
+}
+
+int miliseconds_elapsed(){
+	return (ticks*1000)/18;
 }

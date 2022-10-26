@@ -128,6 +128,10 @@ void sleep(int seconds) {
     int seconds_e = seconds_elapsed();
     for (int i = seconds_elapsed(); i < seconds_e + seconds; i = seconds_elapsed());
 }
+void sleepMiliseconds(int miliseconds) {
+    int miliseconds_e = miliseconds_elapsed();
+    for (int i = miliseconds_elapsed(); i < miliseconds_e + miliseconds; i = miliseconds_elapsed());
+}
 
 void flush_buffer() {
     char dummy[1];

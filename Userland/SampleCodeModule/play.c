@@ -60,7 +60,6 @@ void play(unsigned int fd){
 
     while(1){
         ret = read(1, letter, 1);
-
         if(ret <= 0 ){
             drawMovement(lastLetter1,1);
             drawMovement(lastLetter2,2);
@@ -83,7 +82,7 @@ void play(unsigned int fd){
                 break;
             }
         }
-        sleep(1);
+        sleepMiliseconds(65);
     }
 }
 

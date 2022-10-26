@@ -20,5 +20,6 @@ int sys_hibernate_process(int pid, uint64_t rsi, uint64_t rdx);
 int sys_start_unique_screen(uint64_t rdi, uint64_t rsi, uint64_t rdx);
 int sys_get_inforeg_regs(uint64_t ** result, uint64_t rsi, uint64_t rdx);
 int sys_move(unsigned int fd, int direction, uint8_t * position, color foreground, color background);
+int sys_miliseconds_elapsed(uint64_t rdi, uint64_t rsi, uint64_t rdx);
 
 #endif

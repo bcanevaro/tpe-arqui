@@ -10,6 +10,8 @@ GLOBAL hibernate_process
 GLOBAL start_unique_screen
 GLOBAL get_inforeg_regs
 GLOBAL move
+GLOBAL miliseconds_elapsed
+
 
 section .text
 
@@ -118,6 +120,14 @@ move:
     enter 0,0
 
     mov rax,0x0b
+    int 80h
+
+    leave
+    ret
+miliseconds_elapsed:
+    enter 0,0
+
+    mov rax,0x0c
     int 80h
 
     leave
