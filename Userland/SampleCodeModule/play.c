@@ -26,11 +26,6 @@ char lastLetter2 = 'j';
 void play(unsigned int fd){
     int ret = 0;
     char letter[1] = {0};
-    // for (int i=0;i<AREA;i+=WIDTH){
-    //     playersPaintedPixels[i] = 1;
-    //     playersPaintedPixels[i-1] = 1;
-    //     move(1,DOWN,0xB8000+i*AREA*2,WHITE,WHITE); //No funca
-    // }
     clear_screen();
     int flag=1;
     while(flag){
@@ -79,26 +74,31 @@ int endGame(){
         write( 1, str , 6 );
     }
 
-    for( int i=0 ; i<=(HEIGHT*WIDTH) ; i++ ){
+    for( int i=0 ; i<AREA ; i++ ){
         playersPaintedPixels[i]=0;
     }
     currentPlayer1Pos = (uint8_t*)0xB8000+1960;
     currentPlayer2Pos = (uint8_t*)0xB8000+2040;
     lastLetter1 = 'd';
     lastLetter2 = 'j';
+    crash = 0;
+    collisionState1= 0;
+    collisionState2= 0;
 
     sleepMiliseconds(1000);
     clear_screen();
 }
 
 int drawMovement(char c, int player){
+    int firstColumn = 0;
+    int lastColumn=0;
 	if(player==1) {
         color background = RED;
         color foreground = RED;
-        int firstColumn = 0;
-
         if((((uint32_t) currentPlayer1Pos - 0xB8000) / 2) % (WIDTH) == 0)
             firstColumn = 1;
+        if((((uint32_t) currentPlayer1Pos - 0xB8000) / 2) % (WIDTH) == 79)
+            lastColumn = 1;
         if(c=='d' || c=='D'){
             currentPlayer1Pos += 2;
             move(1,RIGHT,currentPlayer1Pos,foreground,background);
@@ -115,19 +115,19 @@ int drawMovement(char c, int player){
             currentPlayer1Pos += 2 * WIDTH;
 			move(1,DOWN,currentPlayer1Pos,foreground,background);
 		}
-        if(((((uint32_t) currentPlayer1Pos - 0xB8000) / 2) % (WIDTH) == 79) && firstColumn == 1){
-            clear_screen();
+        if((((((uint32_t) currentPlayer1Pos - 0xB8000) / 2) % (WIDTH) == 79) && firstColumn == 1 )|| (((((uint32_t) currentPlayer1Pos - 0xB8000) / 2) % (WIDTH) == 0) && lastColumn == 1)){
+                        crash+=1;
         }
        collisionState1=checkCollision(1);
         playersPaintedPixels[((uint32_t) currentPlayer1Pos - 0xB8000) / 2] = 1;
-	}
+        }
 	else{
         color background = BLUE;
         color foreground = BLUE;
-        int firstColumn = 0;
-
         if((((uint32_t) currentPlayer2Pos - 0xB8000) / 2) % (WIDTH) == 0)
             firstColumn = 1;
+        if((((uint32_t) currentPlayer2Pos - 0xB8000) / 2) % (WIDTH) == 79)
+            lastColumn = 1;
 		if(c=='l' || c=='L'){
             currentPlayer2Pos += 2;
 			move(1,RIGHT,currentPlayer2Pos,foreground,background);
@@ -144,12 +144,13 @@ int drawMovement(char c, int player){
             currentPlayer2Pos += 2 * WIDTH;
 			move(1,DOWN,currentPlayer2Pos,foreground,background);
 		}
-        if(((((uint32_t) currentPlayer2Pos - 0xB8000) / 2) % (WIDTH) == 79) && firstColumn == 1){
-            clear_screen();
+        if((((((uint32_t) currentPlayer2Pos - 0xB8000) / 2) % (WIDTH) == 79) && firstColumn == 1)|| (((((uint32_t) currentPlayer2Pos - 0xB8000) / 2) % (WIDTH) == 0) && lastColumn == 1)){
+            crash+=2;
         }
         collisionState2=checkCollision(2);
         playersPaintedPixels[((uint32_t)currentPlayer2Pos - 0xB8000)/2] = 1;
 	}
+    
 }
 
 
