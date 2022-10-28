@@ -28,6 +28,8 @@ typedef int color;
 #define WIDTH 80
 #define HEIGHT 25
 
+#define AREA WIDTH*HEIGHT
+
 void play(unsigned int fd);
 int drawMovement(char c, int player);
 int checkCollision(int player);
