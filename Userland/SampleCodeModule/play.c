@@ -14,7 +14,6 @@ static uint32_t playersPaintedPixels[AREA] = {0};//Array que nos sirve para guar
  */
 static uint32_t crash = 0;
 static uint32_t collisionState1= 0;
-static uint32_t collisionState2= 0;
 char lastLetter1 = 'd';
 char lastLetter2 = 'j';
 //80 * 12 = 960
@@ -83,7 +82,6 @@ int endGame(){
     lastLetter2 = 'j';
     crash = 0;
     collisionState1= 0;
-    collisionState2= 0;
 
     sleepMiliseconds(1000);
     clear_screen();
@@ -119,7 +117,7 @@ int drawMovement(char c, int player){
                         crash+=1;
         }
        collisionState1=checkCollision(1);
-        playersPaintedPixels[((uint32_t) currentPlayer1Pos - 0xB8000) / 2] = 1;
+            playersPaintedPixels[((uint32_t) currentPlayer1Pos - 0xB8000) / 2] = 1;
         }
 	else{
         color background = BLUE;
@@ -147,7 +145,7 @@ int drawMovement(char c, int player){
         if((((((uint32_t) currentPlayer2Pos - 0xB8000) / 2) % (WIDTH) == 79) && firstColumn == 1)|| (((((uint32_t) currentPlayer2Pos - 0xB8000) / 2) % (WIDTH) == 0) && lastColumn == 1)){
             crash+=2;
         }
-        collisionState2=checkCollision(2);
+        checkCollision(2);
         playersPaintedPixels[((uint32_t)currentPlayer2Pos - 0xB8000)/2] = 1;
 	}
     
@@ -158,8 +156,6 @@ int checkCollision(int player){
     if(player==1){
         if(playersPaintedPixels[((uint32_t)currentPlayer1Pos - 0xB8000)/2]==1 || AREA<((uint32_t)currentPlayer1Pos - 0xB8000)/2 || 0==WIDTH%((uint32_t)currentPlayer1Pos - 0xB8000)/(2*HEIGHT)){
             crash += 1;
-            if(!collisionState2)
-                drawMovement(lastLetter2,2);
             return 1;
         }
     }
